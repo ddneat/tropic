@@ -1,0 +1,20 @@
+{
+  "name": "tropic",
+  "version": "0.1.0",
+  "description": "tropic --thunder in --paradise",
+  "main": "tropic.js",
+  "bin": {
+    "tropic": "./cli.js"
+  },
+  "scripts": {
+    "test": "node test.spec.js && node state.spec.js && node watcher.spec.js",
+    "lint": "semistandard"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "semistandard": "^9.2.1"
+  },
+  "dependencies": {
+  }
+}
