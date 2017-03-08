@@ -7,14 +7,15 @@
     "tropic": "./cli.js"
   },
   "scripts": {
-    "test": "node test.spec.js && node state.spec.js && node watcher.spec.js",
-    "lint": "semistandard"
+    "test": "time for test in *.spec.js; do node $test || exit 1; done;",
+    "lint": "semistandard",
+    "test-integration": "node test/integration"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "babel-register": "^6.23.0",
     "semistandard": "^9.2.1"
   },
-  "dependencies": {
-  }
+  "dependencies": {}
 }

@@ -1,6 +1,7 @@
 function logFail (message, error) {
   console.error('\x1B[31m' + 'Failed: ' + message + '\x1B[0m');
   console.error(error);
+  process.exit(1);
 }
 
 function logPass (message) {
@@ -10,6 +11,21 @@ function logPass (message) {
 function logReport (message) {
   console.log(message);
 }
+
+const createSpy = () => {
+  const argActions = [];
+  function spy (...args) {
+    spy.args.push(args);
+    argActions.map(action => {
+      args[action.index](...action.withArgs);
+    });
+  }
+  spy.args = [];
+  spy.callsArgWith = (index, ...args) => {
+    argActions.push({ index, withArgs: args });
+  };
+  return spy;
+};
 
 module.exports = () => {
   const state = {
@@ -34,6 +50,7 @@ module.exports = () => {
 
   return {
     miniTest,
-    miniTestReport
+    miniTestReport,
+    createSpy
   };
 };

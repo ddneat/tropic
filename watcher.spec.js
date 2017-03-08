@@ -1,4 +1,4 @@
-const { miniTest, miniTestReport } = require('./mini-test')();
+const { miniTest, miniTestReport, createSpy } = require('./mini-test')();
 const assert = require('assert');
 const { isHiddenDirectory, createWatcher } = require('./watcher');
 
@@ -17,21 +17,6 @@ miniTest('isHiddenDirectory returns true when multiple nested hidden folders', (
 miniTest('isHiddenDirectory returns false when no hidden folder', () => {
   assert.equal(isHiddenDirectory('some/file'), false);
 });
-
-const createSpy = () => {
-  const argActions = [];
-  function spy (...args) {
-    spy.args.push(args);
-    argActions.map(action => {
-      args[action.index](...action.withArgs);
-    });
-  }
-  spy.args = [];
-  spy.callsArgWith = (index, ...args) => {
-    argActions.push({ index, withArgs: args });
-  };
-  return spy;
-};
 
 const callCreateWatcher = () => {
   const fs = { watch: createSpy() };
