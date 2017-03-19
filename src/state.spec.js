@@ -1,4 +1,4 @@
-const { miniTest, miniTestReport } = require('./mini-test')();
+const { miniTest, miniTestReport } = require('../util/mini-test')();
 const assert = require('assert');
 const createState = require('./state');
 

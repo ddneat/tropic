@@ -1,4 +1,4 @@
-const { miniTest, miniTestReport, createSpy } = require('./mini-test')();
+const { miniTest, miniTestReport, createSpy } = require('../util/mini-test')();
 const assert = require('assert');
 const { createRunner } = require('./runner');
 
@@ -54,7 +54,7 @@ miniTest('executeTestsWithState calls passed logReport with calc payload', () =>
     return {
       title: 'some title',
       callback: () => {}
-    }
+    };
   };
 
   const state = {
@@ -82,7 +82,7 @@ miniTest('executeTestsWithState calls the tests', () => {
     return {
       title: 'test spy',
       callback: createSpy()
-    }
+    };
   };
 
   const state = {
@@ -106,7 +106,7 @@ miniTest('executeTestsWithState calls the only tests', () => {
     return {
       title: 'test spy',
       callback: createSpy()
-    }
+    };
   };
 
   const state = {
@@ -130,7 +130,7 @@ miniTest('executeTestsWithState does not call the skip tests', () => {
     return {
       title: 'test spy',
       callback: createSpy()
-    }
+    };
   };
 
   const state = {
@@ -154,7 +154,7 @@ miniTest('executeTestsWithState calls logPass with the title for each test which
     return {
       title,
       callback: () => {}
-    }
+    };
   };
 
   const state = {
@@ -179,7 +179,7 @@ miniTest('executeTestsWithState does not call logFail when test does not throw',
     return {
       title: 'some title',
       callback: () => {}
-    }
+    };
   };
 
   const state = {
@@ -202,7 +202,7 @@ miniTest('executeTestsWithState calls logPass with the title for each only test 
     return {
       title: 'some title',
       callback: () => {}
-    }
+    };
   };
 
   const state = {
@@ -226,7 +226,7 @@ miniTest('executeTestsWithState does not call logFail when only test does not th
     return {
       title: 'some title',
       callback: () => {}
-    }
+    };
   };
 
   const state = {
@@ -249,7 +249,7 @@ miniTest('executeTestsWithState does neither call logFail nor logPass for skip t
     return {
       title: 'some title',
       callback: () => {}
-    }
+    };
   };
 
   const state = {
@@ -275,7 +275,7 @@ miniTest('executeTestsWithState calls logFail with the title and error for each 
       callback: () => {
         throw new Error('some callstack with an error message');
       }
-    }
+    };
   };
 
   const state = {
@@ -287,7 +287,7 @@ miniTest('executeTestsWithState calls logFail with the title and error for each 
   executeTestsWithState(state);
   assert.equal(logFail.args.length, 1);
   assert.deepEqual(logFail.args[0][0], 'some title');
-  assert.throws(() => { throw logFail.args[0][1] }, /some callstack with an error message/);
+  assert.throws(() => { throw logFail.args[0][1]; }, /some callstack with an error message/);
 });
 
 miniTest('executeTestsWithState does not call logPass when test throws', () => {
@@ -302,7 +302,7 @@ miniTest('executeTestsWithState does not call logPass when test throws', () => {
       callback: () => {
         throw new Error('error message');
       }
-    }
+    };
   };
 
   const state = {
@@ -327,7 +327,7 @@ miniTest('executeTestsWithState calls logFail with the title and error for each 
       callback: () => {
         throw new Error('some callstack with an error message');
       }
-    }
+    };
   };
 
   const state = {
@@ -339,7 +339,7 @@ miniTest('executeTestsWithState calls logFail with the title and error for each 
   executeTestsWithState(state);
   assert.equal(logFail.args.length, 1);
   assert.deepEqual(logFail.args[0][0], 'some title');
-  assert.throws(() => { throw logFail.args[0][1] }, /some callstack with an error message/);
+  assert.throws(() => { throw logFail.args[0][1]; }, /some callstack with an error message/);
 });
 
 miniTest('executeTestsWithState does not call logPass when only test throws', () => {
@@ -354,7 +354,7 @@ miniTest('executeTestsWithState does not call logPass when only test throws', ()
       callback: () => {
         throw new Error('error message');
       }
-    }
+    };
   };
 
   const state = {

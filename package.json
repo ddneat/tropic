@@ -2,14 +2,14 @@
   "name": "tropic",
   "version": "0.1.0",
   "description": "tropic --thunder in --paradise",
-  "main": "tropic.js",
+  "main": "src/tropic.js",
   "bin": {
-    "tropic": "./cli.js"
+    "tropic": "cli"
   },
   "scripts": {
-    "test": "time for test in *.spec.js; do node $test || exit 1; done;",
+    "test": "time for test in **/*.spec.js; do node $test || exit 1; done;",
     "lint": "semistandard",
-    "test-integration": "node test/integration"
+    "test-integration": "node test"
   },
   "author": "",
   "license": "ISC",

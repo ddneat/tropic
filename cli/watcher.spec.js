@@ -1,4 +1,4 @@
-const { miniTest, miniTestReport, createSpy } = require('./mini-test')();
+const { miniTest, miniTestReport, createSpy } = require('../util/mini-test')();
 const assert = require('assert');
 const { isHiddenDirectory, createWatcher } = require('./watcher');
 

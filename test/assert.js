@@ -1,4 +1,4 @@
-const test = require('../../tropic');
+const test = require('../src/tropic');
 const assert = require('assert');
 
 test('should pass: assert does not throw', () => {

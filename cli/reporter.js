@@ -32,12 +32,18 @@ module.exports = (colorApi) => {
       : str;
   };
 
+  console.log('Starting...');
+
   return {
     update: (state) => {
+      console.log('update');
+      console.log('');
       const iteration = getCurrentIteration(state);
       console.log(overWritePrevious(appendFailing(appendPassing('', iteration), iteration)));
     },
     finish: (state) => {
+      console.log('finish');
+      console.log('');
       const iteration = getCurrentIteration(state);
       console.log(overWritePrevious(appendDuration(appendFailing(appendPassing('', iteration), iteration))));
 
@@ -50,7 +56,7 @@ module.exports = (colorApi) => {
             console.log(red(parsed.message));
             console.log(parsed.stack);
           } catch (error) {
-            console.log(red(test.error));
+            console.log(red(JSON.stringify(test.error)));
           }
         });
       });

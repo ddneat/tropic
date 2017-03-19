@@ -1,6 +1,6 @@
-const { miniTest, miniTestReport } = require('./mini-test')();
+const { miniTest, miniTestReport } = require('../util/mini-test')();
 const assert = require('assert');
-const createCliState = require('./cli-state');
+const createCliState = require('./state');
 
 miniTest('createState returns action getState', () => {
   const actions = createCliState();

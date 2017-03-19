@@ -3,11 +3,10 @@ const startTime = Date.now();
 
 const fs = require('fs');
 const cp = require('child_process');
-const path = require('path');
 const { createWatcher } = require('./watcher');
 const createReporter = require('./reporter');
-const createState = require('./cli-state');
-const colorApi = require('./color-api');
+const createState = require('./state');
+const colorApi = require('../util/color-api');
 
 const { getState, createIteration } = createState();
 

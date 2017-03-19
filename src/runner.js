@@ -3,10 +3,10 @@ const NOT_RESOLVED = `Not resolved within ${SLOW}ms`;
 const DONE_NOT_CALLED = `Done callback not called within ${SLOW}ms`;
 const PROMISE_OR_DONE = 'Tests which have a done callback as first argument should never return a promise';
 
-const isObject = variable => Object.prototype.toString.call(variable) === '[object Object]';
+const isError = variable => Object.prototype.toString.call(variable) === '[object Error]';
 
 const stringifyError = (error, filter) => {
-	if (!isObject(error)) return error;
+  if (!isError(error)) return error;
   const plainObject = {};
   Object.getOwnPropertyNames(error).forEach(key => {
     plainObject[key] = error[key];
@@ -72,21 +72,21 @@ const resolveAsPromise = (test, logPass, logFail) => {
     logFail(test.title, stringifyError(error));
   };
 
-	//	Promise.resolve(test.callback()).then(clearAndPass).catch(clearAndFail);
-	
+  // Promise.resolve(test.callback()).then(clearAndPass).catch(clearAndFail);
+
   let maybePromise;
   try {
     maybePromise = test.callback();
   } catch (error) {
     return clearAndFail(error);
   }
-  
+
   if (isPromise(maybePromise)) {
     return maybePromise
       .then(() => clearAndPass())
       .catch(clearAndFail);
   }
-  
+
   clearAndPass(test.title);
 };
 

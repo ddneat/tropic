@@ -42,7 +42,7 @@ miniTest('colorApi returns white', () => {
   assert.equal(colorApi.white('text'), '\x1B[37mtext\x1B[0m');
 });
 
-const background =[
+const background = [
   '30-40-blackBlackBackground',
   '30-41-blackRedBackground',
   '30-42-blackGreenBackground',
@@ -113,7 +113,7 @@ const background =[
   '37-44-whiteBlueBackground',
   '37-45-whiteMagentaBackground',
   '37-46-whiteCyanBackground',
-  '37-47-whiteWhiteBackground',
+  '37-47-whiteWhiteBackground'
 ];
 
 background.forEach(item => {
