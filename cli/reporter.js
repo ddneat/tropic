@@ -1,26 +1,11 @@
-const moveCursorUp = '\x1B[A';
-const clearLine = '\x1B[2K';
-const erasePrevline = moveCursorUp + clearLine;
-const overWritePrevious = (str) => `${erasePrevline}${str}`;
-
-// let counter = 0;
-// const animation = ['.', ':', '*', ':', '.', '_'];
-// setInterval(() => {
-//   rl.write(null, {ctrl: true, name: 'u'});
-//   const index = counter++ % animation.length;
-//   rl.write(`${animation[index]} Tests passed ${counter}`);
-// }, 150);
-
 module.exports = (colorApi) => {
   const { red, green, yellow, magenta, cyan } = colorApi;
   const startTime = Date.now();
 
   const getDuration = () => `(${Date.now() - startTime}ms)`;
   const appendDuration = (str) => `${str} ${cyan(getDuration())}`;
-
-  const getCurrentIteration = (state) => {
-    return state.iterations[state.iterations.length - 1];
-  };
+  const getLastItem = ar => ar[ar.length - 1];
+  const getCurrentIteration = state => getLastItem(state.iterations);
 
   const appendPassing = (str, iteration) => {
     return green(`${str}${iteration.passCount} passing`);
@@ -32,48 +17,46 @@ module.exports = (colorApi) => {
       : str;
   };
 
-  console.log('Starting...');
+  const renderFailingTest = (fileName, test) => {
+    console.log('');
+    console.log(magenta(fileName), yellow(test.title));
+    try {
+      const parsed = JSON.parse(test.error);
+      console.log(red(parsed.message));
+      console.log(parsed.stack);
+    } catch (error) {
+      console.log(red(JSON.stringify(test.error)));
+    }
+  };
+
+  const renderFailingTestsOfIteration = iteration => {
+    Object.keys(iteration.files).forEach(fileName => {
+      iteration.files[fileName].fail.forEach(test => {
+        renderFailingTest(fileName, test);
+      });
+    });
+  };
+
+  console.log(cyan('Starting...'));
 
   return {
-    update: (state) => {
-      console.log('update');
-      console.log('');
+    pass: (state, fileName) => {
       const iteration = getCurrentIteration(state);
-      console.log(overWritePrevious(appendFailing(appendPassing('', iteration), iteration)));
+      const test = getLastItem(iteration.files[fileName].pass);
+      console.log(green(`Pass: ${test.title}`));
+    },
+    fail: (state, fileName) => {
+      const iteration = getCurrentIteration(state);
+      const test = getLastItem(iteration.files[fileName].fail);
+      console.log(red(`Fail: ${test.title}`));
+    },
+    report: (state, fileName) => {
+      console.log(cyan(`Done: ${fileName}`));
     },
     finish: (state) => {
-      console.log('finish');
-      console.log('');
       const iteration = getCurrentIteration(state);
-      console.log(overWritePrevious(appendDuration(appendFailing(appendPassing('', iteration), iteration))));
-
-      Object.keys(iteration.files).forEach(fileName => {
-        iteration.files[fileName].fail.forEach(test => {
-          console.log('');
-          console.log(magenta(fileName), yellow(test.title));
-          try {
-            const parsed = JSON.parse(test.error);
-            console.log(red(parsed.message));
-            console.log(parsed.stack);
-          } catch (error) {
-            console.log(red(JSON.stringify(test.error)));
-          }
-        });
-      });
-
-      // Object.keys(iteration.files).forEach(fileName => {
-      //   const report = iteration.files[fileName].report[0];
-      //   console.log('');
-      //   console.log(cyan(fileName));
-      //   console.log(cyan(JSON.stringify(report)));
-      // });
-
-      // console.log(yellow('done'));
-      // console.log(red('done'));
-      // console.log(green('done'));
-      // console.log(magenta('done'));
-      // console.log(cyan('done'));
-      // console.log(blue('done'));
+      console.log(appendDuration(appendFailing(appendPassing('', iteration), iteration)));
+      renderFailingTestsOfIteration(iteration);
     }
   };
 };

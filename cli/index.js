@@ -14,13 +14,14 @@ const createOnMessage = (fileName, iterationApi, reporter) => {
   return (message) => {
     if (message.type === 'pass') {
       iterationApi.addPass(fileName, message.title);
+      reporter.pass(getState(), fileName);
     } else if (message.type === 'fail') {
       iterationApi.addFail(fileName, message.title, message.error);
+      reporter.fail(getState(), fileName);
     } else if (message.type === 'report') {
       iterationApi.addReport(fileName, message.payload);
+      reporter.report(getState(), fileName);
     }
-
-    reporter.update(getState());
   };
 };
 
