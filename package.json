@@ -3,16 +3,49 @@
   "version": "0.1.0",
   "description": "tropic --thunder in --paradise",
   "main": "src/tropic.js",
+  "engines": {
+    "node": ">=7.5.0"
+  },
   "bin": {
-    "tropic": "cli"
+    "tropic": "cli/index.js"
   },
   "scripts": {
     "test": "time for test in **/*.spec.js; do node $test || exit 1; done;",
     "lint": "semistandard",
     "test-integration": "node test"
   },
-  "author": "",
+  "author": "davidspinat",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/davidspinat/tropic.git"
+  },
+  "bugs": {
+    "url": "https://github.com/davidspinat/tropic/issues"
+  },
+  "homepage": "https://github.com/davidspinat/tropic#readme",
+  "keywords": [
+    "cli",
+    "test",
+    "runner",
+    "tdd",
+    "unit-testing",
+    "test-runner",
+    "command-line",
+    "assert",
+    "async",
+    "promise",
+    "ava",
+    "mocha",
+    "tape",
+    "tap",
+    "jest",
+    "qunit",
+    "jasmine",
+    "cli-app",
+    "fast",
+    "minimal"
+  ],
   "devDependencies": {
     "babel-register": "^6.23.0",
     "semistandard": "^9.2.1"
