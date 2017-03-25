@@ -1,17 +1,21 @@
 # Tropic Test Runner
 
-Tropic offers following features which might enhance your testing experience:
+__Tropic might have a bright future, however it still lacks cetrain features which might be useful. Please verify if your needs are already implemented before jumping on the tropic experience.__
+
+Tropic already offers following features:
 
 - Async testing with promises or done callback
-- Execute only certain tests by using `only` and `skip`
-- Colorful logs and a reliable watcher
-- Works great with `babel`, `sinon` and `power-assert`
+- Execute certain tests by using `only` and `skip`
+- Watchmode
+- Colorful logs
+
+Check out https://github.com/davidspinat/tropic/issues/1 to get an overview on planned features.
 
 # Contents
 
-- Example
-- Installation
-- ...
+- [Example](#example)
+- [Usage](#usage)
+- [Contribute](#contribute)
 
 # Example
 
@@ -35,11 +39,21 @@ test('title done callback', (done) => {});
 test('title promise', () => Promise.resolve());
 ```
 
-# Installation
-# Configuration
-# Async tests
-# Watchmode
-# Usage with babel and power-assert
+# Usage
+
+You can install tropic using npm:
+
+```
+npm install --save-dev tropic
+```
+
+After you created your first test file (e.g. `test.spec.js`) you might just run tropic like the following:
+
+```
+tropic **/*.spec.js --watch
+```
+
+Note: `--watch` is optional.
 
 # Contribute
 
