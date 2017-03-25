@@ -25,11 +25,11 @@ test('should fail: returns a promise which rejects within timeout', () => {
 });
 
 test('should fail: returns a promise and expects done callback', (done) => {
-  return new Promise();
+  return new Promise(() => {});
 });
 
 test('should fail: returns a promise which will neither resolve nor reject', () => {
-  return new Promise();
+  return new Promise(() => {});
 });
 
 test('should pass: returns a resolved promise', () => {

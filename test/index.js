@@ -22,7 +22,7 @@ const passingCount = str => extractCount(str.match(/\d* passing/g));
 const failingCount = str => extractCount(str.match(/\d* failing/g));
 
 miniTest('assert.js has 1 passing test', () => {
-	const log = output['assert.js'];
+  const log = output['assert.js'];
   assert.equal(passingCount(log), 1);
 });
 
