@@ -9,7 +9,7 @@ Tropic already offers following features:
 - Watchmode
 - Colorful logs
 
-Check out https://github.com/davidspinat/tropic/issues/1 to get an overview on planned features.
+__Check [issue #1](https://github.com/davidspinat/tropic/issues/1) to get an overview on planned features.__
 
 # Contents
 
@@ -43,13 +43,13 @@ test('title promise', () => Promise.resolve());
 
 You can install tropic using npm:
 
-```
+```console
 npm install --save-dev tropic
 ```
 
 After you created your first test file (e.g. `test.spec.js`) you might just run tropic like the following:
 
-```
+```console
 tropic **/*.spec.js --watch
 ```
 
@@ -59,4 +59,4 @@ Note: `--watch` is optional.
 
 - Feel free to open an issue or even a pull request
 - To run one single integration test just go for `node cli test/assert`
-- Check the package.json for further scripts
+- Check the `package.json` for further scripts
