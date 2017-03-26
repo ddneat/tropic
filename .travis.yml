@@ -1,6 +1,8 @@
 language: node_js
 node_js:
   - 6
+before_install:
+  sudo apt-get install -qq time
 script:
   npm run test-ci
 cache:
