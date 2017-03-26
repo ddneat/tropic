@@ -10,9 +10,10 @@
     "tropic": "cli/index.js"
   },
   "scripts": {
-    "test": "time for test in **/*.spec.js; do node $test || exit 1; done;",
     "lint": "semistandard",
-    "test-integration": "node test"
+    "test": "for test in **/*.spec.js; do node $test || exit 1; done;",
+    "test-integration": "node test",
+    "test-ci": "npm run lint && npm run test && npm run test-integration"
   },
   "author": "davidspinat",
   "license": "ISC",
