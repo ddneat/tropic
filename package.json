@@ -48,7 +48,6 @@
     "minimal"
   ],
   "devDependencies": {
-    "babel-register": "^6.23.0",
     "semistandard": "^9.2.1"
   },
   "dependencies": {}
