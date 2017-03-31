@@ -1,14 +1,14 @@
-const COMPILER_HAS_NO_OPTION = '--compiler argument passed without any option e.g.: "--compiler babel-register"';
-const COMPILER_HAS_INVALID_OPTION = '--compiler has an invalid option e.g.: "--watch"';
+const COMPILER_HAS_NO_OPTION = '--require argument passed without any option e.g.: "--require babel-register"';
+const COMPILER_HAS_INVALID_OPTION = '--require has an invalid option e.g.: "--watch"';
 
 module.exports = (processArgs) => {
   const options = {
     isWatchMode: false,
-    compiler: [],
+    require: [],
     testFiles: []
   };
 
-  const isArg = arg => ['--watch', '--compiler'].indexOf(arg) !== -1;
+  const isArg = arg => ['--watch', '--require'].indexOf(arg) !== -1;
   const validateCompilerOption = option => {
     if (!option) throw new Error(COMPILER_HAS_NO_OPTION);
     if (isArg(option)) throw new Error(COMPILER_HAS_INVALID_OPTION);
@@ -23,8 +23,8 @@ module.exports = (processArgs) => {
       case '--watch':
         options.isWatchMode = true;
         break;
-      case '--compiler':
-        options.compiler.push(validateCompilerOption(leftArgs.shift()));
+      case '--require':
+        options.require.push(validateCompilerOption(leftArgs.shift()));
         break;
       default:
         options.testFiles.push(arg);
