@@ -7,7 +7,15 @@ const output = {};
 const isHiddenFile = file => file.match(/^\./) !== null;
 const files = fs.readdirSync('./test').filter(file => file !== 'index.js' && !isHiddenFile(file));
 files.forEach(file => {
-  const child = cp.spawnSync(process.argv[0], ['./cli', 'test/' + file], { stdio: 'pipe' });
+  const childArgs = ['./cli', 'test/' + file];
+  if (file === 'require.js') {
+    childArgs.push('--require', 'babel-register');
+  }
+  const child = cp.spawnSync(
+    process.argv[0],
+    childArgs,
+    { stdio: ['pipe', 'pipe', process.stderr] }
+  );
   output[file] = String(child.stdout);
 });
 
@@ -59,6 +67,11 @@ miniTest('promise.js has 2 passing test', () => {
 miniTest('promise.js has 4 failing test', () => {
   const log = output['promise.js'];
   assert.equal(failingCount(log), 4);
+});
+
+miniTest('require.js has 1 passing test', () => {
+  const log = output['require.js'];
+  assert.equal(passingCount(log), 1);
 });
 
 miniTestReport();
