@@ -25,10 +25,16 @@ const createOnMessage = (fileName, iterationApi, reporter) => {
   };
 };
 
+// to get rid of this variable all forked processes need to be canceld
+// also the getLast in the reporter might fail when an child process
+// from a previous iteration will send a message
+let running = false;
 const createDisconnect = (reporter, childrenLength) => {
   return () => {
+    running = true;
     childrenLength -= 1;
     if (childrenLength === 0) {
+      running = false;
       reporter.finish(getState());
     }
   };
@@ -40,7 +46,8 @@ const execTests = () => {
   const iterationApi = createIteration();
 
   testFiles.forEach(testFile => {
-    const child = cp.fork(testFile);
+    //const child = cp.fork(testFile);
+    const child = cp.fork('../tropic/cli/execute', [testFile, 'babel-register']);
     child.on('message', createOnMessage(testFile, iterationApi, reporter));
     child.on('disconnect', disconnect);
   });
@@ -57,8 +64,12 @@ const testFiles = process.argv.slice(2).filter(arg => !isWatch(arg));
 if (shouldBeWatched) {
   createWatcher(fs, setInterval, (files) => {
     console.log(`changes: ${files.join(', ')}\n`);
-    execTests();
+    if (!running) {
+      execTests();
+    }
   });
 }
 
+// also the getLast in the reporter might fail when an child process
+// from a previous iteration will send a message
 execTests();
