@@ -1,5 +1,5 @@
-const COMPILER_HAS_NO_OPTION = '--require argument passed without any option e.g.: "--require babel-register"';
-const COMPILER_HAS_INVALID_OPTION = '--require has an invalid option e.g.: "--watch"';
+const REQUIRE_HAS_NO_OPTION = '--require argument passed without any option e.g.: "--require babel-register"';
+const REQUIRE_HAS_INVALID_OPTION = '--require has an invalid option e.g.: "--watch"';
 
 module.exports = (processArgs) => {
   const options = {
@@ -11,8 +11,8 @@ module.exports = (processArgs) => {
   const isArg = arg => ['--watch', '--require'].indexOf(arg) !== -1;
   const hasMultipleOptions = option => option && option[0] === '[' && option.slice(-1) === ']';
   const validateRequireOption = option => {
-    if (!option) throw new Error(COMPILER_HAS_NO_OPTION);
-    if (isArg(option)) throw new Error(COMPILER_HAS_INVALID_OPTION);
+    if (!option) throw new Error(REQUIRE_HAS_NO_OPTION);
+    if (isArg(option)) throw new Error(REQUIRE_HAS_INVALID_OPTION);
     return option.replace(' ', '');
   };
 
