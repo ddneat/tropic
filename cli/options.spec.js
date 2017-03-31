@@ -27,6 +27,14 @@ miniTest('parseArgs handles --require', () => {
   });
 });
 
+miniTest('parseArgs handles --require with multiple values', () => {
+  assert.deepStrictEqual(parseArgs(['--require', '[babel-register, custom-script]']), {
+    isWatchMode: false,
+    require: ['babel-register', 'custom-script'],
+    testFiles: []
+  });
+});
+
 miniTest('parseArgs throws when --require argument is present without a option', () => {
   assert.throws(
     () => parseArgs(['--require']),

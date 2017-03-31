@@ -9,10 +9,11 @@ module.exports = (processArgs) => {
   };
 
   const isArg = arg => ['--watch', '--require'].indexOf(arg) !== -1;
-  const validateCompilerOption = option => {
+  const hasMultipleOptions = option => option && option[0] === '[' && option.slice(-1) === ']';
+  const validateRequireOption = option => {
     if (!option) throw new Error(COMPILER_HAS_NO_OPTION);
     if (isArg(option)) throw new Error(COMPILER_HAS_INVALID_OPTION);
-    return option;
+    return option.replace(' ', '');
   };
 
   const parseNextArgument = leftArgs => {
@@ -24,7 +25,11 @@ module.exports = (processArgs) => {
         options.isWatchMode = true;
         break;
       case '--require':
-        options.require.push(validateCompilerOption(leftArgs.shift()));
+        let opt = leftArgs.shift();
+        opt = hasMultipleOptions(opt) ? opt.slice(1, -1).split(',') : [opt];
+        opt.forEach(current =>
+          options.require.push(validateRequireOption(current))
+        );
         break;
       default:
         options.testFiles.push(arg);
