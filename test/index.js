@@ -9,7 +9,7 @@ const files = fs.readdirSync('./test').filter(file => file !== 'index.js' && !is
 files.forEach(file => {
   const childArgs = ['./cli', 'test/' + file];
   if (file === 'require.js') {
-    childArgs.push('--require', 'babel-register');
+    childArgs.push('--require=babel-register');
   }
   const child = cp.spawnSync(
     process.argv[0],
