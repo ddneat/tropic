@@ -84,9 +84,9 @@ miniTest('createWatch calls createSetInterval with callback', () => {
   assert.equal(Object.prototype.toString.call(createSetInterval[0][0]), '[object Function]');
 });
 
-miniTest('createWatch calls createSetInterval with 100ms timeout', () => {
+miniTest('createWatch calls createSetInterval with 5ms timeout', () => {
   const { createSetInterval } = callCreateWatcher();
-  assert.equal(createSetInterval[0][1], 100);
+  assert.equal(createSetInterval[0][1], 5);
 });
 
 miniTest('callback is called with all the changed files', () => {

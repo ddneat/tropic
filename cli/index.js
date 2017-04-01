@@ -6,11 +6,11 @@ const cp = require('child_process');
 const { createWatcher } = require('./watcher');
 const createReporter = require('./reporter');
 const createState = require('./state');
-const parseArgs = require('./options');
+const parseOptions = require('./options');
 const colorApi = require('../util/color-api');
 
 const { getState, createIteration } = createState();
-const options = parseArgs(process.argv.slice(2));
+const options = parseOptions(process.argv.slice(2));
 
 const createOnMessage = (fileName, iterationApi, reporter) => {
   return (message) => {
@@ -42,7 +42,11 @@ const execTests = () => {
   const iterationApi = createIteration();
 
   options.testFiles.forEach(testFile => {
-    const child = cp.fork(testFile);
+    const childArgs = [ testFile ];
+    if (options.require.length) {
+      childArgs.push(`--require=${options.require.join(',')}`);
+    }
+    const child = cp.fork('../tropic/cli/execute', childArgs);
     child.on('message', createOnMessage(testFile, iterationApi, reporter));
     child.on('disconnect', disconnect);
   });

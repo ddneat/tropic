@@ -11,7 +11,7 @@ const createWatcher = (fs, createSetInterval, callback) => {
   createSetInterval(() => {
     if (files.length === 0) return;
     callback(files.splice(0, files.length));
-  }, 100);
+  }, 5);
 };
 
 module.exports = {
