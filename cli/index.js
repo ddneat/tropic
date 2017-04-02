@@ -6,9 +6,11 @@ const cp = require('child_process');
 const { createWatcher } = require('./watcher');
 const createReporter = require('./reporter');
 const createState = require('./state');
+const parseOptions = require('./options');
 const colorApi = require('../util/color-api');
 
 const { getState, createIteration } = createState();
+const options = parseOptions(process.argv.slice(2));
 
 const createOnMessage = (fileName, iterationApi, reporter) => {
   return (message) => {
@@ -36,11 +38,15 @@ const createDisconnect = (reporter, childrenLength) => {
 
 const execTests = () => {
   const reporter = createReporter(colorApi);
-  const disconnect = createDisconnect(reporter, testFiles.length);
+  const disconnect = createDisconnect(reporter, options.testFiles.length);
   const iterationApi = createIteration();
 
-  testFiles.forEach(testFile => {
-    const child = cp.fork(testFile);
+  options.testFiles.forEach(testFile => {
+    const childArgs = [ testFile ];
+    if (options.require.length) {
+      childArgs.push(`--require=${options.require.join(',')}`);
+    }
+    const child = cp.fork('../tropic/cli/execute', childArgs);
     child.on('message', createOnMessage(testFile, iterationApi, reporter));
     child.on('disconnect', disconnect);
   });
@@ -50,11 +56,7 @@ process.on('exit', () => {
   console.log(`\n${Date.now() - startTime}ms execution time`);
 });
 
-const isWatch = arg => arg === '--watch';
-const shouldBeWatched = process.argv.slice(2).some(arg => isWatch(arg));
-const testFiles = process.argv.slice(2).filter(arg => !isWatch(arg));
-
-if (shouldBeWatched) {
+if (options.isWatchMode) {
   createWatcher(fs, setInterval, (files) => {
     console.log(`changes: ${files.join(', ')}\n`);
     execTests();

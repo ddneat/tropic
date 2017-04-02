@@ -1,25 +1,26 @@
-const fs = require('fs');
-const cp = require('child_process');
 const { miniTest, miniTestReport } = require('../util/mini-test')();
+const { passingCount, failingCount, runFiles, runDirectories } = require('./helper');
 const assert = require('assert');
 
-const output = {};
-const isHiddenFile = file => file.match(/^\./) !== null;
-const files = fs.readdirSync('./test').filter(file => file !== 'index.js' && !isHiddenFile(file));
-files.forEach(file => {
-  const child = cp.spawnSync(process.argv[0], ['./cli', 'test/' + file], { stdio: 'pipe' });
-  output[file] = String(child.stdout);
-});
+runDirectories(['require']);
 
-const extractCount = matches => {
-  if (matches && matches.length > 1) {
-    console.log('Invalid reporting');
+const files = [
+  {
+    path: 'assert.js',
+    args: []
+  }, {
+    path: 'done.js',
+    args: []
+  }, {
+    path: 'promise.js',
+    args: []
+  }, {
+    path: 'skip.js',
+    args: []
   }
-  return matches === null ? null : parseInt(matches[matches.length - 1].match(/\d*/));
-};
+];
 
-const passingCount = str => extractCount(str.match(/\d* passing/g));
-const failingCount = str => extractCount(str.match(/\d* failing/g));
+const output = runFiles(files, './test');
 
 miniTest('assert.js has 1 passing test', () => {
   const log = output['assert.js'];
