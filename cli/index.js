@@ -2,6 +2,7 @@
 const startTime = Date.now();
 
 const fs = require('fs');
+const path = require('path');
 const cp = require('child_process');
 const { createWatcher } = require('./watcher');
 const createReporter = require('./reporter');
@@ -12,8 +13,8 @@ const colorApi = require('../util/color-api');
 const { getState, createIteration } = createState();
 const options = parseOptions(process.argv.slice(2));
 
-const createOnMessage = (fileName, iterationApi, reporter) => {
-  return (message) => {
+const createOnMessage = (iterationApi, reporter) => {
+  return (fileName, message) => {
     if (message.type === 'pass') {
       iterationApi.addPass(fileName, message.title);
       reporter.pass(getState(), fileName);
@@ -27,39 +28,80 @@ const createOnMessage = (fileName, iterationApi, reporter) => {
   };
 };
 
-const createDisconnect = (reporter, childrenLength) => {
-  return () => {
-    childrenLength -= 1;
-    if (childrenLength === 0) {
-      reporter.finish(getState());
+const createChildrenApi = (childrenLength) => {
+  const children = [];
+
+  const killChildren = ar => ar.forEach(child => {
+    childrenLength--;
+    child.kill();
+  });
+
+  return {
+    addChild: (child) => { children.push(child); },
+    removeChild: (child) => {
+      killChildren(children.filter(item => item.pid === child.pid));
+    },
+    leftCount: () => childrenLength,
+    cancel: () => {
+      killChildren(children);
     }
   };
 };
 
 const execTests = () => {
   const reporter = createReporter(colorApi);
-  const disconnect = createDisconnect(reporter, options.testFiles.length);
+  const childrenApi = createChildrenApi(options.testFiles.length);
   const iterationApi = createIteration();
+  const onMessage = createOnMessage(iterationApi, reporter);
+  let canceled = false;
 
-  options.testFiles.forEach(testFile => {
+  const disconnect = (child) => {
+    childrenApi.removeChild(child);
+    if (childrenApi.leftCount() <= 0 && !canceled) {
+      reporter.finish(getState());
+    }
+  };
+
+  const cancel = () => {
+    canceled = true;
+    childrenApi.cancel();
+    reporter.cancel();
+  };
+
+  options.testFiles.forEach((testFile) => {
     const childArgs = [ testFile ];
     if (options.require.length) {
       childArgs.push(`--require=${options.require.join(',')}`);
     }
-    const child = cp.fork('../tropic/cli/execute', childArgs);
-    child.on('message', createOnMessage(testFile, iterationApi, reporter));
-    child.on('disconnect', disconnect);
+    const realpath = fs.realpathSync(process.argv[1]);
+    const child = cp.fork(path.join(realpath, '../execute'), childArgs);
+    childrenApi.addChild(child);
+    child.on('message', (message) => { if (!canceled) onMessage(testFile, message); });
+    child.on('disconnect', () => disconnect(child));
   });
+
+  return {
+    isRunning: () => childrenApi.leftCount() >= 1,
+    cancel
+  };
 };
 
 process.on('exit', () => {
-  console.log(`\n${Date.now() - startTime}ms execution time`);
+  console.log(colorApi.cyan(`\n${Date.now() - startTime}ms execution time`));
 });
 
+const logChanges = files => {
+  console.log('');
+  console.log(colorApi.blackCyanBackground(` Watcher: ${files.join(', ')} `));
+  console.log('');
+};
+
 if (options.isWatchMode) {
-  createWatcher(fs, setInterval, (files) => {
-    console.log(`changes: ${files.join(', ')}\n`);
-    execTests();
+  let execApi;
+  createWatcher(fs, setInterval, files => {
+    logChanges(files);
+    if (execApi && execApi.isRunning()) execApi.cancel();
+    execApi = execTests();
   });
 }
 

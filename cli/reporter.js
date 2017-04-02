@@ -41,7 +41,7 @@ module.exports = (colorApi) => {
   log(cyan('Starting...'));
 
   return {
-    pass: (state, iteration, fileName, test) => {
+    pass: (state, fileName) => {
       const iteration = getCurrentIteration(state);
       const test = getLastItem(iteration.files[fileName].pass);
       log(`${green('✓')} ${cyan(test.title)}`);
@@ -53,6 +53,9 @@ module.exports = (colorApi) => {
     },
     report: (state, fileName) => {
       log(cyan(`Done: ${fileName}`));
+    },
+    cancel: () => {
+      log(cyan('Cancel...'));
     },
     finish: (state) => {
       const iteration = getCurrentIteration(state);
