@@ -7,7 +7,7 @@ module.exports = (colorApi) => {
   const getLastItem = ar => ar[ar.length - 1];
   const getCurrentIteration = state => getLastItem(state.iterations);
 
-  const indent = (str) => `  ${str}`;
+  const log = str => console.log(`${str}`);
   const appendPassing = (str, iteration) => {
     return green(`${str}${iteration.passCount} passing`);
   };
@@ -19,14 +19,14 @@ module.exports = (colorApi) => {
   };
 
   const renderFailingTest = (fileName, test) => {
-    console.log('');
-    console.log(indent(`${magenta(fileName)} ${yellow(test.title)}`));
+    log('');
+    log(`${magenta(fileName)} ${yellow(test.title)}`);
     try {
       const parsed = JSON.parse(test.error);
-      console.log(indent(red(parsed.message)));
-      console.log(indent(parsed.stack));
+      log(red(parsed.message));
+      log(parsed.stack);
     } catch (error) {
-      console.log(indent(red(JSON.stringify(test.error))));
+      log(red(JSON.stringify(test.error)));
     }
   };
 
@@ -38,26 +38,26 @@ module.exports = (colorApi) => {
     });
   };
 
-  console.log(indent(cyan('Starting...')));
+  log(cyan('Starting...'));
 
   return {
-    pass: (state, fileName) => {
+    pass: (state, iteration, fileName, test) => {
       const iteration = getCurrentIteration(state);
       const test = getLastItem(iteration.files[fileName].pass);
-      console.log(indent(`${green('✓')} ${cyan(test.title)}`));
+      log(`${green('✓')} ${cyan(test.title)}`);
     },
     fail: (state, fileName) => {
       const iteration = getCurrentIteration(state);
       const test = getLastItem(iteration.files[fileName].fail);
-      console.log(indent(red(`Fail: ${test.title}`)));
+      log(red(`Fail: ${test.title}`));
     },
     report: (state, fileName) => {
-      console.log(indent(cyan(`Done: ${fileName}`)));
+      log(cyan(`Done: ${fileName}`));
     },
     finish: (state) => {
       const iteration = getCurrentIteration(state);
-      console.log('');
-      console.log(indent(appendDuration(appendFailing(appendPassing('', iteration), iteration))));
+      log('');
+      log(appendDuration(appendFailing(appendPassing('', iteration), iteration)));
       renderFailingTestsOfIteration(iteration);
     }
   };
