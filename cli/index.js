@@ -73,8 +73,7 @@ const execTests = () => {
     if (options.require.length) {
       childArgs.push(`--require=${options.require.join(',')}`);
     }
-    const realpath = fs.realpathSync(process.argv[1]);
-    const child = cp.fork(path.join(realpath, '../execute'), childArgs);
+    const child = cp.fork(path.join(__dirname, 'execute'), childArgs);
     childrenApi.addChild(child);
     child.on('message', (message) => { if (!canceled) onMessage(testFile, message); });
     child.on('disconnect', () => disconnect(child));
