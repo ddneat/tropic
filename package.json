@@ -1,7 +1,7 @@
 {
   "name": "tropic",
   "version": "0.2.0",
-  "description": "tropic --thunder in --paradise",
+  "description": "Test Runner Library",
   "main": "src/tropic.js",
   "engines": {
     "node": ">=7.5.0"
@@ -37,6 +37,13 @@
     "async",
     "promise",
     "ava",
+    "babel",
+    "ES6",
+    "ES2015",
+    "ES2016",
+    "ES2017",
+    "transpile",
+    "compile",
     "mocha",
     "tape",
     "tap",
