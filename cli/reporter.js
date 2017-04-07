@@ -7,6 +7,7 @@ module.exports = (colorApi) => {
   const getLastItem = ar => ar[ar.length - 1];
   const getCurrentIteration = state => getLastItem(state.iterations);
 
+  const log = str => console.log(`${str}`);
   const appendPassing = (str, iteration) => {
     return green(`${str}${iteration.passCount} passing`);
   };
@@ -18,14 +19,14 @@ module.exports = (colorApi) => {
   };
 
   const renderFailingTest = (fileName, test) => {
-    console.log('');
-    console.log(magenta(fileName), yellow(test.title));
+    log('');
+    log(`${magenta(fileName)} ${yellow(test.title)}`);
     try {
       const parsed = JSON.parse(test.error);
-      console.log(red(parsed.message));
-      console.log(parsed.stack);
+      log(red(parsed.message));
+      log(parsed.stack);
     } catch (error) {
-      console.log(red(JSON.stringify(test.error)));
+      log(red(JSON.stringify(test.error)));
     }
   };
 
@@ -37,25 +38,29 @@ module.exports = (colorApi) => {
     });
   };
 
-  console.log(cyan('Starting...'));
+  log(cyan('Starting...'));
 
   return {
     pass: (state, fileName) => {
       const iteration = getCurrentIteration(state);
       const test = getLastItem(iteration.files[fileName].pass);
-      console.log(green(`Pass: ${test.title}`));
+      log(`${green('✓')} ${cyan(test.title)}`);
     },
     fail: (state, fileName) => {
       const iteration = getCurrentIteration(state);
       const test = getLastItem(iteration.files[fileName].fail);
-      console.log(red(`Fail: ${test.title}`));
+      log(red(`Fail: ${test.title}`));
     },
     report: (state, fileName) => {
-      console.log(cyan(`Done: ${fileName}`));
+      log(cyan(`Done: ${fileName}`));
+    },
+    cancel: () => {
+      log(cyan('Cancel...'));
     },
     finish: (state) => {
       const iteration = getCurrentIteration(state);
-      console.log(appendDuration(appendFailing(appendPassing('', iteration), iteration)));
+      log('');
+      log(appendDuration(appendFailing(appendPassing('', iteration), iteration)));
       renderFailingTestsOfIteration(iteration);
     }
   };
