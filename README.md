@@ -1,6 +1,6 @@
 # Tropic Test Runner
 
-__Tropic might have a bright future, however it still lacks cetrain features which might be useful. Please verify if your needs are already implemented before jumping on the tropic experience.__
+__Tropic already supports a bunch of great features, however it's still a work in progress. Please verify if your needs are already implemented before jumping on the tropic experience.__
 
 Tropic already offers following features:
 
@@ -8,16 +8,21 @@ Tropic already offers following features:
 - Execute certain tests by using `only` and `skip`
 - Watchmode
 - Colorful logs
+- No global variables 
+- Isolated test execution
+- Transpile/Compile code with e.g.: babel, ES2017
+- Lightweight, No additional dependencies
 
 __Check [issue #1](https://github.com/davidspinat/tropic/issues/1) to get an overview on planned features.__
 
-# Contents
+## Contents
 
 - [Example](#example)
 - [Usage](#usage)
+- [Options](#options)
 - [Contribute](#contribute)
 
-# Example
+## Example
 
 ```js
 const test = require('tropic');
@@ -39,7 +44,7 @@ test('title done callback', (done) => {});
 test('title promise', () => Promise.resolve());
 ```
 
-# Usage
+## Usage
 
 You can install tropic using npm:
 
@@ -52,8 +57,37 @@ After you created your first test file (e.g. `test.spec.js`) you might just run 
 ```console
 tropic **/*.spec.js --watch
 ```
+Usage with babel / ES2017:
 
-Note: `--watch` is optional.
+```console
+npm install --save-dev babel-register 
+```
+
+```console
+tropic **/*.spec.js --require=babel-register
+```
+
+Note: Please verify that you have a `.babelrc` or babel config within your `package.json.` Also make sure that you have all `plugins/presets` in installed and configured.
+
+## Options
+
+### `--watch`
+
+Starts a watcher for the current directory. On file changes the tests will be automaticly executed again. In case there is already an execution running, the running execution will be canceled. The watcher ignores the `node_modules` directory, dotfiles and hidden directories like `.idea`.
+
+### `--require`
+
+Following an example using `babel-register`:
+
+```console
+tropic **/*.spec.js --require=babel-register
+```
+
+Multiple modules are also supported:
+
+```console
+tropic **/*.spec.js --require=babel-register,./custom-local-script.js
+```
 
 # Contribute
 
