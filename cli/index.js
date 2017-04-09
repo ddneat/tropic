@@ -9,6 +9,7 @@ const createReporter = require('./reporter');
 const createState = require('./state');
 const parseOptions = require('./options');
 const colorApi = require('../util/color-api');
+const os = require('os');
 
 const { getState, createIteration } = createState();
 const options = parseOptions(process.argv.slice(2));
@@ -68,16 +69,41 @@ const execTests = () => {
     reporter.cancel();
   };
 
-  options.testFiles.forEach((testFile) => {
+  let currentIndex = 0;
+  let currentRunning = 0;
+  let coreLimit = os.cpus().length - 1;
+
+  const runFile = (testFile) => {
     const childArgs = [ testFile ];
     if (options.require.length) {
       childArgs.push(`--require=${options.require.join(',')}`);
     }
     const child = cp.fork(path.join(__dirname, 'execute'), childArgs);
     childrenApi.addChild(child);
+    currentRunning += 1;
+
+    const runNext = () => {
+      if (
+        currentIndex + 1 < options.testFiles.length &&
+        currentRunning <= coreLimit &&
+        !canceled
+      ) {
+        runFile(options.testFiles[currentIndex++]);
+      }
+    };
+
+    console.log(currentRunning);
     child.on('message', (message) => { if (!canceled) onMessage(testFile, message); });
-    child.on('disconnect', () => disconnect(child));
-  });
+    child.on('disconnect', () => { disconnect(child); });
+    child.on('exit', () => {
+      currentRunning -= 1;
+      runNext();
+    });
+
+    runNext();
+  };
+
+  runFile(options.testFiles[currentIndex]);
 
   return {
     isRunning: () => childrenApi.leftCount() >= 1,
