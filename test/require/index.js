@@ -15,13 +15,13 @@ const files = [
 const output = runFiles(files, './test/require');
 
 miniTest('babel-only has 1 passing test', () => {
-  const log = output['babel-only.js'];
-  assert.equal(passingCount(log), 1);
+  const testFile = output['babel-only.js'];
+  assert.equal(passingCount(testFile.stdout), 1);
 });
 
 miniTest('multiple-options has 1 passing test', () => {
-  const log = output['multiple-options.js'];
-  assert.equal(passingCount(log), 1);
+  const testFile = output['multiple-options.js'];
+  assert.equal(passingCount(testFile.stdout), 1);
 });
 
 miniTestReport();

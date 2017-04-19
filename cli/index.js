@@ -122,10 +122,8 @@ process.on('beforeExit', () => {
   console.log(colorApi.cyan(`\n${Date.now() - startTime}ms execution time`));
   const currentState = getState();
   const currentIteration = currentState.iterations[currentState.iterations.length - 1];
-  if (currentIteration.failCount > 0) {
-    process.exitCode = 1;
-  }
-})
+  process.exitCode = currentIteration.failCount ? 1 : 0;
+});
 
 const logChanges = files => {
   console.log('');

@@ -23,43 +23,53 @@ const files = [
 const output = runFiles(files, './test');
 
 miniTest('assert.js has 1 passing test', () => {
-  const log = output['assert.js'];
-  assert.equal(passingCount(log), 1);
+  const testFile = output['assert.js'];
+  assert.equal(passingCount(testFile.stdout), 1);
 });
 
 miniTest('assert.js has 1 failing test', () => {
-  const log = output['assert.js'];
-  assert.equal(failingCount(log), 1);
+  const testFile = output['assert.js'];
+  assert.equal(failingCount(testFile.stdout), 1);
 });
 
 miniTest('skip.js has 0 passing test', () => {
-  const log = output['skip.js'];
-  assert.equal(passingCount(log), 0);
+  const testFile = output['skip.js'];
+  assert.equal(passingCount(testFile.stdout), 0);
 });
 
 miniTest('skip.js has no match for failing', () => {
-  const log = output['skip.js'];
-  assert.equal(failingCount(log), null);
+  const testFile = output['skip.js'];
+  assert.equal(failingCount(testFile.stdout), null);
 });
 
 miniTest('done.js has 2 passing test', () => {
-  const log = output['done.js'];
-  assert.equal(passingCount(log), 2);
+  const testFile = output['done.js'];
+  assert.equal(passingCount(testFile.stdout), 2);
 });
 
 miniTest('done.js has 4 failing test', () => {
-  const log = output['done.js'];
-  assert.equal(failingCount(log), 4);
+  const testFile = output['done.js'];
+  assert.equal(failingCount(testFile.stdout), 4);
 });
 
 miniTest('promise.js has 2 passing test', () => {
-  const log = output['promise.js'];
-  assert.equal(passingCount(log), 2);
+  const testFile = output['promise.js'];
+  assert.equal(passingCount(testFile.stdout), 2);
 });
 
 miniTest('promise.js has 4 failing test', () => {
-  const log = output['promise.js'];
-  assert.equal(failingCount(log), 4);
+  const testFile = output['promise.js'];
+  assert.equal(failingCount(testFile.stdout), 4);
+});
+
+miniTest('exitCode is 0 when all test pass', () => {
+  const testFile = output['skip.js'];
+  assert.equal(testFile.status, 0);
+});
+
+miniTest('exitCode is 1 when at least one failing test', () => {
+  const testFile = output['assert.js'];
+  assert.equal(testFile.status, 1);
 });
 
 miniTestReport();
