@@ -3,8 +3,6 @@ const createState = require('./state');
 const createTest = require('./test');
 const { createRunner } = require('./runner');
 
-// implement custom stream
-// check how to use objectMode
 const logStream = fs.createWriteStream(null, { fd: 4 });
 const write = obj => logStream.write(JSON.stringify(obj) + '--tropic_delimiter--');
 
