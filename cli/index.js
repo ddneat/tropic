@@ -9,13 +9,11 @@ const createReporter = require('./reporter');
 const createState = require('./state');
 const parseOptions = require('./options');
 const colorApi = require('../util/color-api');
+const os = require('os');
 
 const { getState, createIteration } = createState();
 const options = parseOptions(process.argv.slice(2));
 
-// { type: 'pass', title: 'passing test' }
-// { type: 'fail', title: 'failing test', error: {} }
-// { type: 'report', payload: {} }
 const createOnMessage = (iterationApi, reporter) => {
   return (fileName, message) => {
     if (message.type === 'pass') {
@@ -71,26 +69,48 @@ const execTests = () => {
     reporter.cancel();
   };
 
-  options.testFiles.forEach((testFile) => {
+  let currentIndex = 0;
+  let currentRunning = 0;
+  let coreLimit = os.cpus().length - 1;
+
+  const runFile = (testFile) => {
     const childArgs = [ path.join(__dirname, 'execute'), testFile ];
     if (options.require.length) {
       childArgs.push(`--require=${options.require.join(',')}`);
     }
     const child = cp.spawn(process.argv[0], childArgs, { stdio: ['inherit', 'inherit', 'inherit', null, 'pipe'] });
     childrenApi.addChild(child);
+    currentRunning += 1;
+
+    const runNext = () => {
+      if (
+        currentIndex + 1 < options.testFiles.length &&
+        currentRunning <= coreLimit &&
+        !canceled
+      ) {
+        runFile(options.testFiles[currentIndex++]);
+      }
+    };
+
     child.stdio[4].on('data', data => {
       if (canceled) return;
-      // regex to split between {} here {}
-      // find a proper way to chain jsons into stream
-      // starting from { all following { will trigger ignore till after }
       data
         .toString()
         .split('--tropic_delimiter--')
         .filter(item => item.length)
         .forEach(item => onMessage(testFile, JSON.parse(item)));
     });
-    child.on('close', () => disconnect(child));
-  });
+
+    child.on('close', () => {
+      disconnect(child)
+      currentRunning -= 1;
+      runNext();
+    });
+
+    runNext();
+  };
+
+  runFile(options.testFiles[currentIndex]);
 
   return {
     isRunning: () => childrenApi.leftCount() >= 1,
