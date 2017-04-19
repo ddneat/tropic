@@ -95,19 +95,17 @@ const isTestExpectingDoneCallback = (test) => test.callback.length >= 1;
 const createRunner = (logPass, logFail, logReport) => {
   function runTests (tests) {
     const promises = [];
+    const curryResolve = (resolve, callback) => (...args) => {
+      callback(...args);
+      resolve();
+    };
     tests.forEach((test) => {
       promises.push(new Promise(resolve => {
-        const wrappedPass = (...args) => {
-          logPass(args);
-          resolve();
-        };
-        const wrappedFail = (...args) => {
-          logFail(args);
-          resolve();
-        };
+        const logPassWithResolve = curryResolve(resolve, logPass);
+        const logFailWithResolve = curryResolve(resolve, logFail);
         isTestExpectingDoneCallback(test)
-          ? callWithDoneCallback(test, wrappedPass, wrappedFail)
-          : resolveAsPromise(test, wrappedPass, wrappedFail);
+          ? callWithDoneCallback(test, logPassWithResolve, logFailWithResolve)
+          : resolveAsPromise(test, logPassWithResolve, logFailWithResolve);
       }));
     });
     return Promise.all(promises);
