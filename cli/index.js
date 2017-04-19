@@ -13,6 +13,9 @@ const colorApi = require('../util/color-api');
 const { getState, createIteration } = createState();
 const options = parseOptions(process.argv.slice(2));
 
+// { type: 'pass', title: 'passing test' }
+// { type: 'fail', title: 'failing test', error: {} }
+// { type: 'report', payload: {} }
 const createOnMessage = (iterationApi, reporter) => {
   return (fileName, message) => {
     if (message.type === 'pass') {
@@ -69,14 +72,24 @@ const execTests = () => {
   };
 
   options.testFiles.forEach((testFile) => {
-    const childArgs = [ testFile ];
+    const childArgs = [ path.join(__dirname, 'execute'), testFile ];
     if (options.require.length) {
       childArgs.push(`--require=${options.require.join(',')}`);
     }
-    const child = cp.fork(path.join(__dirname, 'execute'), childArgs);
+    const child = cp.spawn(process.argv[0], childArgs, { stdio: ['inherit', 'inherit', 'inherit', null, 'pipe'] });
     childrenApi.addChild(child);
-    child.on('message', (message) => { if (!canceled) onMessage(testFile, message); });
-    child.on('disconnect', () => disconnect(child));
+    child.stdio[4].on('data', data => {
+      if (canceled) return;
+      // regex to split between {} here {}
+      // find a proper way to chain jsons into stream
+      // starting from { all following { will trigger ignore till after }
+      data
+        .toString()
+        .split('--tropic_delimiter--')
+        .filter(item => item.length)
+        .forEach(item => onMessage(testFile, JSON.parse(item)));
+    });
+    child.on('close', () => disconnect(child));
   });
 
   return {
