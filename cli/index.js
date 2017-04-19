@@ -74,11 +74,11 @@ const execTests = () => {
   let coreLimit = os.cpus().length - 1;
 
   const runFile = (testFile) => {
-    const childArgs = [ testFile ];
+    const childArgs = [ path.join(__dirname, 'execute'), testFile ];
     if (options.require.length) {
       childArgs.push(`--require=${options.require.join(',')}`);
     }
-    const child = cp.fork(path.join(__dirname, 'execute'), childArgs);
+    const child = cp.spawn(process.argv[0], childArgs, { stdio: ['inherit', 'inherit', 'inherit', null, 'pipe'] });
     childrenApi.addChild(child);
     currentRunning += 1;
 
@@ -92,10 +92,17 @@ const execTests = () => {
       }
     };
 
-    console.log(currentRunning);
-    child.on('message', (message) => { if (!canceled) onMessage(testFile, message); });
-    child.on('disconnect', () => { disconnect(child); });
-    child.on('exit', () => {
+    child.stdio[4].on('data', data => {
+      if (canceled) return;
+      data
+        .toString()
+        .split('--tropic_delimiter--')
+        .filter(item => item.length)
+        .forEach(item => onMessage(testFile, JSON.parse(item)));
+    });
+
+    child.on('close', () => {
+      disconnect(child);
       currentRunning -= 1;
       runNext();
     });

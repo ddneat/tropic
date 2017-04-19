@@ -1,17 +1,22 @@
+const fs = require('fs');
 const createState = require('./state');
 const createTest = require('./test');
 const { createRunner } = require('./runner');
 
+const logStream = fs.createWriteStream(null, { fd: 4 });
+const write = obj => logStream.write(JSON.stringify(obj) + '--tropic_delimiter--');
+
 const logPass = (title) => {
-  process.send({ type: 'pass', title: title });
+  write({ type: 'pass', title: title });
 };
 
 const logFail = (title, error) => {
-  process.send({ type: 'fail', title: title, error: error });
+  write({ type: 'fail', title: title, error: error });
 };
 
 const logReport = (payload) => {
-  process.send({ type: 'report', payload });
+  write({ type: 'report', payload });
+  logStream.end();
 };
 
 const { getState, addTest, addTestWithOnly, addTestWithSkip } = createState();
