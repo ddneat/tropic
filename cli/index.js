@@ -102,7 +102,7 @@ const execTests = () => {
     });
 
     child.on('close', () => {
-      disconnect(child)
+      disconnect(child);
       currentRunning -= 1;
       runNext();
     });
