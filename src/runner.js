@@ -113,14 +113,17 @@ const createRunner = (logPass, logFail, logReport) => {
 
   return (state) => {
     const tests = state.only.length ? state.only : state.test;
-    runTests(tests).then(() => {
+
+    const allResolved = () => {
       logReport({
         executedCount: tests.length,
         allTestsLength: state.test.length + state.only.length + state.skip.length,
         onlyLength: state.only.length,
         skipLength: state.skip.length
       });
-    });
+    };
+
+    runTests(tests).then(allResolved);
   };
 };
 
