@@ -27,7 +27,10 @@ const runFiles = (files, basePath) => {
       childArgs,
       { stdio: ['pipe', 'pipe', process.stderr] }
     );
-    output[file.path] = String(child.stdout);
+    output[file.path] = {
+      status: child.status,
+      stdout: String(child.stdout)
+    };
   });
   return output;
 };
