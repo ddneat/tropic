@@ -118,9 +118,14 @@ const execTests = () => {
   };
 };
 
-process.on('exit', () => {
+process.on('beforeExit', () => {
   console.log(colorApi.cyan(`\n${Date.now() - startTime}ms execution time`));
-});
+  const currentState = getState();
+  const currentIteration = currentState.iterations[currentState.iterations.length - 1];
+  if (currentIteration.failCount > 0) {
+    process.exitCode = 1;
+  }
+})
 
 const logChanges = files => {
   console.log('');
