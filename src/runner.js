@@ -94,22 +94,34 @@ const isTestExpectingDoneCallback = (test) => test.callback.length >= 1;
 
 const createRunner = (logPass, logFail, logReport) => {
   function runTests (tests) {
+    const promises = [];
     tests.forEach((test) => {
-      isTestExpectingDoneCallback(test)
-        ? callWithDoneCallback(test, logPass, logFail)
-        : resolveAsPromise(test, logPass, logFail);
+      promises.push(new Promise(resolve => {
+        const wrappedPass = (...args) => {
+          logPass(args);
+          resolve();
+        };
+        const wrappedFail = (...args) => {
+          logFail(args);
+          resolve();
+        };
+        isTestExpectingDoneCallback(test)
+          ? callWithDoneCallback(test, wrappedPass, wrappedFail)
+          : resolveAsPromise(test, wrappedPass, wrappedFail);
+      }));
     });
+    return Promise.all(promises);
   }
 
   return (state) => {
     const tests = state.only.length ? state.only : state.test;
-    runTests(tests);
-
-    logReport({
-      executedCount: tests.length,
-      allTestsLength: state.test.length + state.only.length + state.skip.length,
-      onlyLength: state.only.length,
-      skipLength: state.skip.length
+    runTests(tests).then(() => {
+      logReport({
+        executedCount: tests.length,
+        allTestsLength: state.test.length + state.only.length + state.skip.length,
+        onlyLength: state.only.length,
+        skipLength: state.skip.length
+      });
     });
   };
 };
