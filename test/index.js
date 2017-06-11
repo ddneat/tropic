@@ -17,6 +17,9 @@ const files = [
   }, {
     path: 'skip.js',
     args: []
+  }, {
+    path: 'console.js',
+    args: []
   }
 ];
 
@@ -40,6 +43,16 @@ miniTest('skip.js has 0 passing test', () => {
 miniTest('skip.js has no match for failing', () => {
   const testFile = output['skip.js'];
   assert.equal(failingCount(testFile.stdout), null);
+});
+
+miniTest('console.js has the log of executed test', () => {
+  const testFile = output['console.js'];
+  assert.equal(testFile.stdout.includes('puts that one to the console'), true);
+});
+
+miniTest('console.js has no log of the skipped test', () => {
+  const testFile = output['console.js'];
+  assert.equal(testFile.stdout.includes('NOPE that one is not logged'), false);
 });
 
 miniTest('done.js has 2 passing test', () => {
