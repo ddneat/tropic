@@ -18,6 +18,9 @@ const files = [
     path: 'skip.js',
     args: []
   }, {
+    path: 'async-await.js',
+    args: []
+  }, {
     path: 'console.js',
     args: []
   }
@@ -53,6 +56,16 @@ miniTest('console.js has the log of executed test', () => {
 miniTest('console.js has no log of the skipped test', () => {
   const testFile = output['console.js'];
   assert.equal(testFile.stdout.includes('NOPE that one is not logged'), false);
+});
+
+miniTest('async-await.js has 1 passing test', () => {
+  const testFile = output['async-await.js'];
+  assert.equal(passingCount(testFile.stdout), 1);
+});
+
+miniTest('async-wait.js has 2 failing tests', () => {
+  const testFile = output['async-await.js'];
+  assert.equal(failingCount(testFile.stdout), 2);
 });
 
 miniTest('done.js has 2 passing test', () => {
