@@ -4,7 +4,7 @@ __Tropic already supports a bunch of great features, however it's still a work i
 
 Tropic already offers following features:
 
-- Async testing with promises or done callback
+- Async testing with async/await, promises or done callback
 - Execute certain tests by using `only` and `skip`
 - Watchmode
 - Colorful logs
@@ -42,6 +42,7 @@ test.skip('title test.skip', () => {
 
 test('title done callback', (done) => {});
 test('title promise', () => Promise.resolve());
+test('title async-await', async () => await () => {});
 ```
 
 ## Usage

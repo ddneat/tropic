@@ -18,6 +18,9 @@ const files = [
     path: 'skip.js',
     args: []
   }, {
+    path: 'async-await.js',
+    args: []
+  }, {
     path: 'console.js',
     args: []
   }
@@ -55,22 +58,32 @@ miniTest('console.js has no log of the skipped test', () => {
   assert.equal(testFile.stdout.includes('NOPE that one is not logged'), false);
 });
 
-miniTest('done.js has 2 passing test', () => {
+miniTest('async-await.js has 1 passing test', () => {
+  const testFile = output['async-await.js'];
+  assert.equal(passingCount(testFile.stdout), 1);
+});
+
+miniTest('async-wait.js has 2 failing tests', () => {
+  const testFile = output['async-await.js'];
+  assert.equal(failingCount(testFile.stdout), 2);
+});
+
+miniTest('done.js has 2 passing tests', () => {
   const testFile = output['done.js'];
   assert.equal(passingCount(testFile.stdout), 2);
 });
 
-miniTest('done.js has 4 failing test', () => {
+miniTest('done.js has 4 failing tests', () => {
   const testFile = output['done.js'];
   assert.equal(failingCount(testFile.stdout), 4);
 });
 
-miniTest('promise.js has 2 passing test', () => {
+miniTest('promise.js has 2 passing tests', () => {
   const testFile = output['promise.js'];
   assert.equal(passingCount(testFile.stdout), 2);
 });
 
-miniTest('promise.js has 4 failing test', () => {
+miniTest('promise.js has 4 failing tests', () => {
   const testFile = output['promise.js'];
   assert.equal(failingCount(testFile.stdout), 4);
 });
