@@ -68,22 +68,22 @@ miniTest('async-wait.js has 2 failing tests', () => {
   assert.equal(failingCount(testFile.stdout), 2);
 });
 
-miniTest('done.js has 2 passing test', () => {
+miniTest('done.js has 2 passing tests', () => {
   const testFile = output['done.js'];
   assert.equal(passingCount(testFile.stdout), 2);
 });
 
-miniTest('done.js has 4 failing test', () => {
+miniTest('done.js has 4 failing tests', () => {
   const testFile = output['done.js'];
   assert.equal(failingCount(testFile.stdout), 4);
 });
 
-miniTest('promise.js has 2 passing test', () => {
+miniTest('promise.js has 2 passing tests', () => {
   const testFile = output['promise.js'];
   assert.equal(passingCount(testFile.stdout), 2);
 });
 
-miniTest('promise.js has 4 failing test', () => {
+miniTest('promise.js has 4 failing tests', () => {
   const testFile = output['promise.js'];
   assert.equal(failingCount(testFile.stdout), 4);
 });
