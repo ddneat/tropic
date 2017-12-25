@@ -29,11 +29,10 @@ const createOnMessage = (iterationApi, reporter) => {
   };
 };
 
-const createChildrenApi = (childrenLength) => {
+const createChildrenApi = () => {
   const children = [];
 
   const killChildren = ar => ar.forEach(child => {
-    childrenLength--;
     child.kill();
   });
 
@@ -42,7 +41,6 @@ const createChildrenApi = (childrenLength) => {
     removeChild: (child) => {
       killChildren(children.filter(item => item.pid === child.pid));
     },
-    leftCount: () => childrenLength,
     cancel: () => {
       killChildren(children);
     }
@@ -51,14 +49,14 @@ const createChildrenApi = (childrenLength) => {
 
 const execTests = () => {
   const reporter = createReporter(colorApi);
-  const childrenApi = createChildrenApi(options.testFiles.length);
+  const childrenApi = createChildrenApi();
   const iterationApi = createIteration();
   const onMessage = createOnMessage(iterationApi, reporter);
   let canceled = false;
 
-  const disconnect = (child) => {
+  const disconnect = (child, isLast) => {
     childrenApi.removeChild(child);
-    if (childrenApi.leftCount() <= 0 && !canceled) {
+    if (isLast && !canceled) {
       reporter.finish(getState());
     }
   };
@@ -71,9 +69,10 @@ const execTests = () => {
 
   let currentIndex = 0;
   let currentRunning = 0;
-  let coreLimit = os.cpus().length - 1;
+  let coreLimit = os.cpus().length;
 
   const runFile = (testFile) => {
+    console.log('testFile', testFile);
     const childArgs = [ path.join(__dirname, 'execute'), testFile ];
     if (options.require.length) {
       childArgs.push(`--require=${options.require.join(',')}`);
@@ -84,11 +83,12 @@ const execTests = () => {
 
     const runNext = () => {
       if (
-        currentIndex + 1 < options.testFiles.length &&
-        currentRunning <= coreLimit &&
+        currentIndex < options.testFiles.length - 1 &&
+        currentRunning < coreLimit &&
         !canceled
       ) {
-        runFile(options.testFiles[currentIndex++]);
+        const localIndex = ++currentIndex;
+        runFile(options.testFiles[localIndex]);
       }
     };
 
@@ -102,8 +102,9 @@ const execTests = () => {
     });
 
     child.on('close', () => {
-      disconnect(child);
-      currentRunning -= 1;
+      currentRunning--;
+      const isLast = options.testFiles.length - 1 - currentIndex + currentRunning <= 0;
+      disconnect(child, isLast);
       runNext();
     });
 
@@ -113,7 +114,6 @@ const execTests = () => {
   runFile(options.testFiles[currentIndex]);
 
   return {
-    isRunning: () => childrenApi.leftCount() >= 1,
     cancel
   };
 };
@@ -135,7 +135,7 @@ if (options.isWatchMode) {
   let execApi;
   createWatcher(fs, setInterval, files => {
     logChanges(files);
-    if (execApi && execApi.isRunning()) execApi.cancel();
+    if (execApi) execApi.cancel();
     execApi = execTests();
   });
 }
