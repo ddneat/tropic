@@ -72,7 +72,6 @@ const execTests = () => {
   let coreLimit = os.cpus().length;
 
   const runFile = (testFile) => {
-    console.log('testFile', testFile);
     const childArgs = [ path.join(__dirname, 'execute'), testFile ];
     if (options.require.length) {
       childArgs.push(`--require=${options.require.join(',')}`);
