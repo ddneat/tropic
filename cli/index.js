@@ -29,33 +29,33 @@ const createOnMessage = (iterationApi, reporter) => {
   };
 };
 
-const createChildrenApi = () => {
-  const children = [];
+const createProcessPool = () => {
+  const pool = [];
 
-  const killChildren = ar => ar.forEach(child => {
-    child.kill();
+  const killProcesses = ar => ar.forEach(process => {
+    process.kill();
   });
 
   return {
-    addChild: (child) => { children.push(child); },
-    removeChild: (child) => {
-      killChildren(children.filter(item => item.pid === child.pid));
+    add: (process) => { pool.push(process); },
+    remove: (process) => {
+      killProcesses(pool.filter(item => item.pid === process.pid));
     },
     cancel: () => {
-      killChildren(children);
+      killProcesses(pool);
     }
   };
 };
 
 const execTests = () => {
   const reporter = createReporter(colorApi);
-  const childrenApi = createChildrenApi();
+  const processPool = createProcessPool();
   const iterationApi = createIteration();
   const onMessage = createOnMessage(iterationApi, reporter);
   let canceled = false;
 
   const disconnect = (child, isLast) => {
-    childrenApi.removeChild(child);
+    processPool.remove(child);
     if (isLast && !canceled) {
       reporter.finish(getState());
     }
@@ -63,7 +63,7 @@ const execTests = () => {
 
   const cancel = () => {
     canceled = true;
-    childrenApi.cancel();
+    processPool.cancel();
     reporter.cancel();
   };
 
@@ -77,7 +77,7 @@ const execTests = () => {
       childArgs.push(`--require=${options.require.join(',')}`);
     }
     const child = cp.spawn(process.argv[0], childArgs, { stdio: ['inherit', 'inherit', 'inherit', null, 'pipe'] });
-    childrenApi.addChild(child);
+    processPool.add(child);
     currentRunning += 1;
 
     const runNext = () => {
