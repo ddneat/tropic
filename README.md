@@ -1,8 +1,6 @@
 # Tropic Test Runner
 
-__Tropic already supports a bunch of great features, however it's still a work in progress. Please verify if your needs are already implemented before jumping on the tropic experience.__
-
-Tropic already offers following features:
+Tropic offers following features:
 
 - Async testing with async/await, promises or done callback
 - Execute certain tests by using `only` and `skip`
@@ -12,8 +10,6 @@ Tropic already offers following features:
 - Isolated test execution
 - Transpile/Compile code with e.g.: babel, ES2017
 - Lightweight, No additional dependencies
-
-__Check [issue #1](https://github.com/davidspinat/tropic/issues/1) to get an overview on planned features.__
 
 ## Contents
 
