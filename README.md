@@ -54,14 +54,14 @@ After you created your first test file (e.g. `test.spec.js`) you might just run 
 ```console
 tropic **/*.spec.js --watch
 ```
-Usage with babel / ES2017:
+Usage with babel / ES2019:
 
 ```console
-npm install --save-dev babel-register 
+npm install @babel/register --save-dev
 ```
 
 ```console
-tropic **/*.spec.js --require=babel-register
+tropic **/*.spec.js --require=@babel/register
 ```
 
 Note: Please verify that you have a `.babelrc` or babel config within your `package.json.` Also make sure that you have all `plugins/presets` in installed and configured.
@@ -74,16 +74,16 @@ Starts a watcher for the current directory. On file changes the tests will be au
 
 ### `--require`
 
-Following an example using `babel-register`:
+Following an example using `@babel/register`:
 
 ```console
-tropic **/*.spec.js --require=babel-register
+tropic **/*.spec.js --require=@babel/register
 ```
 
 Multiple modules are also supported:
 
 ```console
-tropic **/*.spec.js --require=babel-register,./custom-local-script.js
+tropic **/*.spec.js --require=@babel/register,./custom-local-script.js
 ```
 
 # Contribute
