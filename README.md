@@ -1,8 +1,6 @@
 # Tropic Test Runner
 
-__Tropic already supports a bunch of great features, however it's still a work in progress. Please verify if your needs are already implemented before jumping on the tropic experience.__
-
-Tropic already offers following features:
+Tropic offers following features:
 
 - Async testing with async/await, promises or done callback
 - Execute certain tests by using `only` and `skip`
@@ -12,8 +10,6 @@ Tropic already offers following features:
 - Isolated test execution
 - Transpile/Compile code with e.g.: babel, ES2017
 - Lightweight, No additional dependencies
-
-__Check [issue #1](https://github.com/davidspinat/tropic/issues/1) to get an overview on planned features.__
 
 ## Contents
 
@@ -58,14 +54,14 @@ After you created your first test file (e.g. `test.spec.js`) you might just run 
 ```console
 tropic **/*.spec.js --watch
 ```
-Usage with babel / ES2017:
+Usage with babel / ES2019:
 
 ```console
-npm install --save-dev babel-register 
+npm install @babel/register --save-dev
 ```
 
 ```console
-tropic **/*.spec.js --require=babel-register
+tropic **/*.spec.js --require=@babel/register
 ```
 
 Note: Please verify that you have a `.babelrc` or babel config within your `package.json.` Also make sure that you have all `plugins/presets` in installed and configured.
@@ -78,16 +74,16 @@ Starts a watcher for the current directory. On file changes the tests will be au
 
 ### `--require`
 
-Following an example using `babel-register`:
+Following an example using `@babel/register`:
 
 ```console
-tropic **/*.spec.js --require=babel-register
+tropic **/*.spec.js --require=@babel/register
 ```
 
 Multiple modules are also supported:
 
 ```console
-tropic **/*.spec.js --require=babel-register,./custom-local-script.js
+tropic **/*.spec.js --require=@babel/register,./custom-local-script.js
 ```
 
 # Contribute
