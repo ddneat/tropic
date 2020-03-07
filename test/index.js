@@ -3,9 +3,12 @@ const { passingCount, failingCount, runFiles, runDirectories } = require('./help
 const fs = require('fs')
 const assert = require('assert')
 
-const dirs = fs
+const readFiles = fs
   .readdirSync(__dirname, { withFileTypes: true })
-  .filter(dirent => dirent.isDirectory() || dirent.name === 'helper')
+
+const dirs = readFiles
+  .filter(dirent => dirent.isDirectory())
+  .filter(dirent => dirent.name !== 'helper')
   .map(dirent => dirent.name)
 
 runDirectories(dirs)
