@@ -73,6 +73,7 @@ const execTests = () => {
 
   const runFile = (testFile) => {
     const childArgs = [ path.join(__dirname, 'execute'), testFile ];
+    childArgs.push(`--timeout=${options.timeout}`);
     if (options.require.length) {
       childArgs.push(`--require=${options.require.join(',')}`);
     }

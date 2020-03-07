@@ -14,6 +14,6 @@ test('should fail: async await', async () => {
 });
 
 test('should fail: very slow', async () => {
-  await timeout(50);
+  await timeout(210);
   assert(true);
 });

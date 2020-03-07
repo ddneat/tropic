@@ -86,6 +86,14 @@ Multiple modules are also supported:
 tropic **/*.spec.js --require=@babel/register,./custom-local-script.js
 ```
 
+### `--timeout`
+
+Sets the threshold of the accepted test execution duration in milliseconds. [Default 200 ms]
+
+```console
+tropic **/*.spec.js --timeout=20
+```
+
 # Contribute
 
 - Feel free to open an issue or even a pull request

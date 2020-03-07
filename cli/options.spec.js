@@ -7,7 +7,17 @@ miniTest('parseOptions returns the default state when no args are passed', () =>
   assert.deepEqual(parseOptions([]), {
     isWatchMode: false,
     require: [],
-    testFiles: []
+    testFiles: [],
+    timeout: 200
+  });
+});
+
+miniTest('parseOptions handles --timeout', () => {
+  assert.deepEqual(parseOptions(['--timeout=100']), {
+    isWatchMode: false,
+    require: [],
+    testFiles: [],
+    timeout: 100
   });
 });
 
@@ -15,7 +25,8 @@ miniTest('parseOptions handles --watch', () => {
   assert.deepEqual(parseOptions(['--watch']), {
     isWatchMode: true,
     require: [],
-    testFiles: []
+    testFiles: [],
+    timeout: 200
   });
 });
 
@@ -23,7 +34,8 @@ miniTest('parseOptions handles --require', () => {
   assert.deepEqual(parseOptions(['--require=babel-register']), {
     isWatchMode: false,
     require: ['babel-register'],
-    testFiles: []
+    testFiles: [],
+    timeout: 200
   });
 });
 
@@ -31,7 +43,8 @@ miniTest('parseOptions handles --require with multiple values', () => {
   assert.deepStrictEqual(parseOptions(['--require=babel-register,./local-script.js']), {
     isWatchMode: false,
     require: ['babel-register', './local-script.js'],
-    testFiles: []
+    testFiles: [],
+    timeout: 200
   });
 });
 
@@ -46,7 +59,8 @@ miniTest('parseOptions handles passed test files', () => {
   assert.deepEqual(parseOptions(['file.spec.js', 'another.spec.js']), {
     isWatchMode: false,
     require: [],
-    testFiles: ['file.spec.js', 'another.spec.js']
+    testFiles: ['file.spec.js', 'another.spec.js'],
+    timeout: 200
   });
 });
 
@@ -54,7 +68,8 @@ miniTest('parseOptions successfully handles integration example', () => {
   assert.deepEqual(parseOptions(['file.spec.js', '--watch', '--require=babel-register', 'another.spec.js']), {
     isWatchMode: true,
     require: ['babel-register'],
-    testFiles: ['file.spec.js', 'another.spec.js']
+    testFiles: ['file.spec.js', 'another.spec.js'],
+    timeout: 200
   });
 });
 

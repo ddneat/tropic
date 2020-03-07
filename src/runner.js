@@ -1,7 +1,10 @@
-const SLOW = 20;
-const NOT_RESOLVED = `Not resolved within ${SLOW}ms`;
-const DONE_NOT_CALLED = `Done callback not called within ${SLOW}ms`;
-const PROMISE_OR_DONE = 'Tests which have a done callback as first argument should never return a promise';
+const createErrorMessages = (SLOW) => {
+  return {
+    NOT_RESOLVED: `Not resolved within ${SLOW}ms`,
+    DONE_NOT_CALLED: `Done callback not called within ${SLOW}ms`,
+    PROMISE_OR_DONE: 'Tests which have a done callback as first argument should never return a promise'
+  };
+};
 
 const isError = variable => Object.prototype.toString.call(variable) === '[object Error]';
 
@@ -16,7 +19,8 @@ const stringifyError = (error, filter) => {
 
 const isPromise = (fn) => (fn && typeof fn.then === 'function');
 
-const callWithDoneCallback = (test, logPass, logFail) => {
+const callWithDoneCallback = (test, logPass, logFail, errorMessages, SLOW) => {
+  const { DONE_NOT_CALLED, PROMISE_OR_DONE } = errorMessages;
   const onResolve = () => logPass(test.title);
   const onReject = (error) => {
     logFail(test.title, stringifyError(error));
@@ -48,7 +52,8 @@ const callWithDoneCallback = (test, logPass, logFail) => {
   }).then(onResolve).catch(onReject);
 };
 
-const resolveAsPromise = (test, logPass, logFail) => {
+const resolveAsPromise = (test, logPass, logFail, errorMessages, SLOW) => {
+  const { NOT_RESOLVED } = errorMessages;
   let resolveTimeout = setTimeout(() => {
     logFail(test.title, NOT_RESOLVED);
     resolveTimeout = null;
@@ -92,7 +97,10 @@ const resolveAsPromise = (test, logPass, logFail) => {
 
 const isTestExpectingDoneCallback = (test) => test.callback.length >= 1;
 
-const createRunner = (logPass, logFail, logReport) => {
+const createRunner = (logPass, logFail, logReport, options) => {
+  const { timeout } = options || {};
+  if (!timeout) throw new Error('Runner is missing arg "timeout".');
+  const errorMessages = createErrorMessages(timeout);
   function runTests (tests) {
     const promises = [];
     const curryResolve = (resolve, callback) => (...args) => {
@@ -104,8 +112,8 @@ const createRunner = (logPass, logFail, logReport) => {
         const logPassWithResolve = curryResolve(resolve, logPass);
         const logFailWithResolve = curryResolve(resolve, logFail);
         isTestExpectingDoneCallback(test)
-          ? callWithDoneCallback(test, logPassWithResolve, logFailWithResolve)
-          : resolveAsPromise(test, logPassWithResolve, logFailWithResolve);
+          ? callWithDoneCallback(test, logPassWithResolve, logFailWithResolve, errorMessages, timeout)
+          : resolveAsPromise(test, logPassWithResolve, logFailWithResolve, errorMessages, timeout);
       }));
     });
     return Promise.all(promises);
