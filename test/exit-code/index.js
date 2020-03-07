@@ -29,7 +29,6 @@ const output = runFiles(files, './test/exit-code')
 
 miniTest('all-pass should have exit code 0', () => {
   const testFile = output['all-pass']
-  console.log(testFile)
   assert.strictEqual(testFile.status, 0)
   assert.strictEqual(passingCount(testFile.stdout), 3)
   assert.strictEqual(failingCount(testFile.stdout), 0)
