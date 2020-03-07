@@ -121,10 +121,10 @@ const execTests = () => {
 
 const getExistCode = (currentState) => {
   const currentIteration = currentState.iterations[currentState.iterations.length - 1]
-  const anyTestFailedOrNoneHasPassed = currentIteration.failCount >= 0 || currentIteration.passCount <= 0
+  const isAnyTestFailingOrHasNonePassed = currentIteration.failCount >= 1 || currentIteration.passCount <= 0
   const allStatusCodes = Object.keys(currentIteration.files).map(key => currentIteration.files[key].code)
-  const anyTestFileExitedWithBadStatusCode = allStatusCodes.reduce((acc, curr) => acc + curr, 0) !== 0
-  return anyTestFailedOrNoneHasPassed || anyTestFileExitedWithBadStatusCode ? 1 : 0
+  const isAnyTestFileExitingWithErroStatusCode = allStatusCodes.reduce((acc, curr) => acc + curr, 0) !== 0
+  return isAnyTestFailingOrHasNonePassed || isAnyTestFileExitingWithErroStatusCode ? 1 : 0
 }
 
 process.on('beforeExit', () => {
