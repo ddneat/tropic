@@ -2,7 +2,7 @@ const { miniTest, miniTestReport } = require('../util/mini-test')();
 const { passingCount, failingCount, runFiles, runDirectories } = require('./helper');
 const assert = require('assert');
 
-runDirectories(['require']);
+runDirectories(['require', 'timeout']);
 
 const files = [
   {
