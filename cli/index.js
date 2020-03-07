@@ -7,7 +7,7 @@ const cp = require('child_process');
 const { createWatcher } = require('./watcher');
 const createReporter = require('./reporter');
 const createState = require('./state');
-const parseOptions = require('./options');
+const parseOptions = require('../util/options');
 const colorApi = require('../util/color-api');
 const os = require('os');
 

@@ -2,7 +2,7 @@ const fs = require('fs');
 const createState = require('./state');
 const createTest = require('./test');
 const { createRunner } = require('./runner');
-const parseOptions = require('../cli/options');
+const parseOptions = require('../util/options');
 const options = parseOptions(process.argv.slice(2));
 
 const logStream = fs.createWriteStream(null, { fd: 4 });
