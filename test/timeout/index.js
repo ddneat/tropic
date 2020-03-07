@@ -26,7 +26,7 @@ const output = runFiles(files, './test/timeout')
 
 miniTest('pass-timeout-40ms', () => {
   const testFile = output['pass-timeout-40ms']
-  assert.strictEqual(testFile.status, 1)
+  assert.strictEqual(testFile.status, 0)
   assert.strictEqual(passingCount(testFile.stdout), 1)
   assert.strictEqual(failingCount(testFile.stdout), 0)
 })
@@ -47,7 +47,7 @@ miniTest('fail-default-timeout', () => {
 
 miniTest('pass-default-timeout', () => {
   const testFile = output['pass-default-timeout']
-  assert.strictEqual(testFile.status, 1)
+  assert.strictEqual(testFile.status, 0)
   assert.strictEqual(passingCount(testFile.stdout), 1)
   assert.strictEqual(failingCount(testFile.stdout), 0)
 })

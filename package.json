@@ -4,7 +4,7 @@
   "description": "Test Runner Library",
   "main": "src/tropic.js",
   "engines": {
-    "node": ">=7.5.0"
+    "node": ">=10.19.0"
   },
   "bin": {
     "tropic": "cli/index.js"
