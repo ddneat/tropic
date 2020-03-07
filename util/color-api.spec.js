@@ -1,46 +1,46 @@
-const { miniTest, miniTestReport } = require('./mini-test')();
-const assert = require('assert');
-const colorApi = require('./color-api');
+const { miniTest, miniTestReport } = require('./mini-test')()
+const assert = require('assert')
+const colorApi = require('./color-api')
 
 miniTest('colorApi returns black', () => {
-  assert.equal(typeof colorApi.black, 'function');
-  assert.equal(colorApi.black('text'), '\x1B[30mtext\x1B[0m');
-});
+  assert.strictEqual(typeof colorApi.black, 'function')
+  assert.strictEqual(colorApi.black('text'), '\x1B[30mtext\x1B[0m')
+})
 
 miniTest('colorApi returns red', () => {
-  assert.equal(typeof colorApi.red, 'function');
-  assert.equal(colorApi.red('text'), '\x1B[31mtext\x1B[0m');
-});
+  assert.strictEqual(typeof colorApi.red, 'function')
+  assert.strictEqual(colorApi.red('text'), '\x1B[31mtext\x1B[0m')
+})
 
 miniTest('colorApi returns green', () => {
-  assert.equal(typeof colorApi.green, 'function');
-  assert.equal(colorApi.green('text'), '\x1B[32mtext\x1B[0m');
-});
+  assert.strictEqual(typeof colorApi.green, 'function')
+  assert.strictEqual(colorApi.green('text'), '\x1B[32mtext\x1B[0m')
+})
 
 miniTest('colorApi returns yellow', () => {
-  assert.equal(typeof colorApi.yellow, 'function');
-  assert.equal(colorApi.yellow('text'), '\x1B[33mtext\x1B[0m');
-});
+  assert.strictEqual(typeof colorApi.yellow, 'function')
+  assert.strictEqual(colorApi.yellow('text'), '\x1B[33mtext\x1B[0m')
+})
 
 miniTest('colorApi returns blue', () => {
-  assert.equal(typeof colorApi.blue, 'function');
-  assert.equal(colorApi.blue('text'), '\x1B[34mtext\x1B[0m');
-});
+  assert.strictEqual(typeof colorApi.blue, 'function')
+  assert.strictEqual(colorApi.blue('text'), '\x1B[34mtext\x1B[0m')
+})
 
 miniTest('colorApi returns magenta', () => {
-  assert.equal(typeof colorApi.magenta, 'function');
-  assert.equal(colorApi.magenta('text'), '\x1B[35mtext\x1B[0m');
-});
+  assert.strictEqual(typeof colorApi.magenta, 'function')
+  assert.strictEqual(colorApi.magenta('text'), '\x1B[35mtext\x1B[0m')
+})
 
 miniTest('colorApi returns cyan', () => {
-  assert.equal(typeof colorApi.cyan, 'function');
-  assert.equal(colorApi.cyan('text'), '\x1B[36mtext\x1B[0m');
-});
+  assert.strictEqual(typeof colorApi.cyan, 'function')
+  assert.strictEqual(colorApi.cyan('text'), '\x1B[36mtext\x1B[0m')
+})
 
 miniTest('colorApi returns white', () => {
-  assert.equal(typeof colorApi.white, 'function');
-  assert.equal(colorApi.white('text'), '\x1B[37mtext\x1B[0m');
-});
+  assert.strictEqual(typeof colorApi.white, 'function')
+  assert.strictEqual(colorApi.white('text'), '\x1B[37mtext\x1B[0m')
+})
 
 const background = [
   '30-40-blackBlackBackground',
@@ -114,18 +114,18 @@ const background = [
   '37-45-whiteMagentaBackground',
   '37-46-whiteCyanBackground',
   '37-47-whiteWhiteBackground'
-];
+]
 
 background.forEach(item => {
-  const color = item.split('-');
+  const color = item.split('-')
   miniTest(`colorApi returns ${color[2]}`, () => {
-    assert.equal(typeof colorApi[color[2]], 'function');
-    assert.equal(colorApi[color[2]]('text'), `\x1B[${color[0]};${color[1]}mtext\x1B[0m`);
-  });
-});
+    assert.strictEqual(typeof colorApi[color[2]], 'function')
+    assert.strictEqual(colorApi[color[2]]('text'), `\x1B[${color[0]};${color[1]}mtext\x1B[0m`)
+  })
+})
 
 miniTest('colorApi has 64 background methods', () => {
-  assert.equal(background.length, 64);
-});
+  assert.strictEqual(background.length, 64)
+})
 
-miniTestReport();
+miniTestReport()
