@@ -1,8 +1,14 @@
 const { miniTest, miniTestReport } = require('../util/mini-test')()
 const { passingCount, failingCount, runFiles, runDirectories } = require('./helper')
+const fs = require('fs')
 const assert = require('assert')
 
-runDirectories(['require', 'timeout'])
+const dirs = fs
+  .readdirSync(__dirname, { withFileTypes: true })
+  .filter(dirent => dirent.isDirectory() || dirent.name === 'helper')
+  .map(dirent => dirent.name)
+
+runDirectories(dirs)
 
 const files = [
   {
