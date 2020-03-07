@@ -1,5 +1,5 @@
 const path = require('path');
-const parseOptions = require('./options');
+const parseOptions = require('../util/options');
 const options = parseOptions(process.argv.slice(2));
 
 options.require.forEach(module => {

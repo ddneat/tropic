@@ -5,16 +5,16 @@ test('should pass: done called sync', (done) => {
   done();
 });
 
-test('should pass: done is called within 20ms', (done) => {
+test('should pass: done is called within 200ms', (done) => {
   setTimeout(() => {
     done();
   }, 10);
 });
 
-test('should fail: done is called after 20ms', (done) => {
+test('should fail: done is called after 200ms', (done) => {
   setTimeout(() => {
     done();
-  }, 30);
+  }, 210);
 });
 
 test('should fail: done never called', (done) => {

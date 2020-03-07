@@ -95,7 +95,8 @@ miniTest('iteration addPass creates a file and pushes into pass', () => {
   assert.deepEqual(files['test.js'], {
     pass: [{ title: 'test description' }],
     fail: [],
-    report: []
+    report: [],
+    code: 1
   });
 });
 
@@ -109,7 +110,8 @@ miniTest('iteration addPass does not overwrite previous state', () => {
   assert.deepEqual(files['test.js'], {
     pass: [{ title: 'first' }, { title: 'second' }, { title: 'last' }],
     fail: [],
-    report: []
+    report: [],
+    code: 1
   });
 });
 
@@ -128,7 +130,8 @@ miniTest('iteration addFail creates a file and pushes into pass', () => {
   assert.deepEqual(files['test.js'], {
     pass: [],
     fail: [{ title: 'test description', error: 'error message' }],
-    report: []
+    report: [],
+    code: 1
   });
 });
 
@@ -146,7 +149,8 @@ miniTest('iteration addFail does not overwrite previous state', () => {
       { title: 'second', error: 'error message' },
       { title: 'last', error: 'error message' }
     ],
-    report: []
+    report: [],
+    code: 1
   });
 });
 
@@ -158,7 +162,8 @@ miniTest('iteration addReport creates a file and pushes into report', () => {
   assert.deepEqual(files['test.js'], {
     pass: [],
     fail: [],
-    report: ['metadata']
+    report: ['metadata'],
+    code: 1
   });
 });
 
@@ -172,7 +177,8 @@ miniTest('iteration addReport does not overwrite reports', () => {
   assert.deepEqual(files['test.js'], {
     pass: [],
     fail: [],
-    report: ['first', 'second', 'last']
+    report: ['first', 'second', 'last'],
+    code: 1
   });
 });
 
@@ -189,12 +195,43 @@ miniTest('iteration works with multiple files', () => {
     'first.js': {
       pass: [{ title: 'any test' }, { title: 'another test' }],
       fail: [],
-      report: []
+      report: [],
+      code: 1
     },
     'second.js': {
       pass: [],
       fail: [{ title: 'failing one', error: 'error message' }],
-      report: []
+      report: [],
+      code: 1
+    }
+  });
+});
+
+miniTest('setCode works with multiple files', () => {
+  const actions = createCliState();
+  const iterationActions = actions.createIteration();
+  iterationActions.setCode('first.js', 0);
+  iterationActions.setCode('second.js', 1);
+  iterationActions.setCode('third.js', 2);
+  const iteration = actions.getState().iterations[0];
+  assert.deepEqual(iteration.files, {
+    'first.js': {
+      pass: [],
+      fail: [],
+      report: [],
+      code: 0
+    },
+    'second.js': {
+      pass: [],
+      fail: [],
+      report: [],
+      code: 1
+    },
+    'third.js': {
+      pass: [],
+      fail: [],
+      report: [],
+      code: 2
     }
   });
 });

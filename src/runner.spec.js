@@ -2,8 +2,11 @@ const { miniTest, miniTestReport, createSpy } = require('../util/mini-test')();
 const assert = require('assert');
 const { createRunner } = require('./runner');
 
+const options = { timeout: 200 };
+
 miniTest('createRunner returns function executeTestsWithState', () => {
-  const executeTestsWithState = createRunner();
+  const noop = () => {};
+  const executeTestsWithState = createRunner(noop, noop, noop, options);
   assert.equal(Object.prototype.toString.call(executeTestsWithState), '[object Function]');
 });
 
@@ -11,7 +14,7 @@ miniTest('executeTestsWithState calls the tests', () => {
   const logPass = () => {};
   const logFail = () => {};
   const logReport = () => {};
-  const executeTestsWithState = createRunner(logPass, logFail, logReport);
+  const executeTestsWithState = createRunner(logPass, logFail, logReport, options);
 
   const createTestSpy = () => {
     return {
@@ -35,7 +38,7 @@ miniTest('executeTestsWithState calls the only tests', () => {
   const logPass = () => {};
   const logFail = () => {};
   const logReport = () => {};
-  const executeTestsWithState = createRunner(logPass, logFail, logReport);
+  const executeTestsWithState = createRunner(logPass, logFail, logReport, options);
 
   const createTestSpy = () => {
     return {
@@ -59,7 +62,7 @@ miniTest('executeTestsWithState does not call the skip tests', () => {
   const logPass = () => {};
   const logFail = () => {};
   const logReport = () => {};
-  const executeTestsWithState = createRunner(logPass, logFail, logReport);
+  const executeTestsWithState = createRunner(logPass, logFail, logReport, options);
 
   const createTestSpy = () => {
     return {

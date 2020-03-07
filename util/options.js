@@ -1,8 +1,10 @@
 const REQUIRE_OPTION_HAS_NO_ARGUMENT = '--require option passed without any argument. e.g.: "--require=babel-register"';
+const TIMEOUT_OPTION_HAS_NO_ARGUMENT = '--timeout option passed without any argument. e.g.: "--timeout=20"';
 
 module.exports = (processArgs) => {
   const options = {
     isWatchMode: false,
+    timeout: 200,
     require: [],
     testFiles: []
   };
@@ -22,6 +24,10 @@ module.exports = (processArgs) => {
         currentArgs.split(',').forEach(arg => {
           options.require.push(arg);
         });
+        break;
+      case '--timeout':
+        if (!currentArgs) throw new Error(TIMEOUT_OPTION_HAS_NO_ARGUMENT);
+        options.timeout = currentArgs;
         break;
       default:
         options.testFiles.push(currentOption);

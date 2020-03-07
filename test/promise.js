@@ -11,7 +11,7 @@ test('should fail: returns a promise which rejects after timeout', () => {
     setTimeout(() => {
       console.log('already timeout');
       reject();
-    }, 30);
+    }, 210);
   });
 });
 
