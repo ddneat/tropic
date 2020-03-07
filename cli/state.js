@@ -15,6 +15,7 @@ module.exports = () => {
     const createFile = fileName => {
       if (!iteration.files[fileName]) {
         iteration.files[fileName] = {
+          code: 1,
           pass: [],
           fail: [],
           report: []
@@ -36,6 +37,10 @@ module.exports = () => {
       addReport: (fileName, meta) => {
         createFile(fileName);
         iteration.files[fileName].report.push(meta);
+      },
+      setCode: (fileName, value) => {
+        createFile(fileName);
+        iteration.files[fileName].code = value;
       }
     };
   };

@@ -88,9 +88,9 @@ miniTest('promise.js has 4 failing tests', () => {
   assert.equal(failingCount(testFile.stdout), 4);
 });
 
-miniTest('exitCode is 0 when all tests pass', () => {
+miniTest('exitCode is 1 when all tests skipped', () => {
   const testFile = output['skip.js'];
-  assert.equal(testFile.status, 0);
+  assert.equal(testFile.status, 1);
 });
 
 miniTest('exitCode is 1 when at least one failing test', () => {
