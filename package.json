@@ -10,54 +10,45 @@
     "tropic": "cli/index.js"
   },
   "scripts": {
-    "lint": "semistandard",
+    "lint": "standard",
     "test": "for test in **/*.spec.js; do node $test || exit 1; done;",
     "test-integration": "node test",
     "test-ci": "npm run lint && npm run test && npm run test-integration"
   },
-  "author": "davidspinat",
+  "author": "ddneat",
   "license": "Apache 2.0",
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/davidspinat/tropic.git"
+    "url": "git+ssh://git@github.com/ddneat/tropic.git"
   },
   "bugs": {
-    "url": "https://github.com/davidspinat/tropic/issues"
+    "url": "https://github.com/ddneat/tropic/issues"
   },
-  "homepage": "https://github.com/davidspinat/tropic#readme",
+  "homepage": "https://github.com/ddneat/tropic#readme",
   "keywords": [
-    "cli",
-    "test",
-    "runner",
     "tdd",
     "unit-testing",
     "test-runner",
-    "command-line",
     "assert",
     "async",
     "promise",
-    "ava",
     "babel",
-    "ES6",
-    "ES2015",
-    "ES2016",
-    "ES2017",
-    "transpile",
-    "compile",
     "mocha",
+    "jest",
+    "ava",
     "tape",
     "tap",
-    "jest",
     "qunit",
+    "selenium",
     "jasmine",
-    "cli-app",
-    "fast",
+    "chai",
     "minimal"
   ],
   "devDependencies": {
-    "babel-preset-es2015": "^6.24.0",
-    "babel-register": "^6.24.0",
-    "semistandard": "^9.2.1"
+    "@babel/core": "^7.8.7",
+    "@babel/preset-env": "^7.8.7",
+    "@babel/register": "^7.8.6",
+    "standard": "^14.3.1"
   },
   "dependencies": {}
 }

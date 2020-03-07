@@ -1,1 +1,1 @@
-global.injected = () => true;
+global.injected = () => true

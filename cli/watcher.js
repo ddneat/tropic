@@ -1,20 +1,20 @@
-const isHiddenDirectory = path => path.match(/(^\.)|(\/\.)/) !== null;
+const isHiddenDirectory = path => path.match(/(^\.)|(\/\.)/) !== null
 
 const createWatcher = (fs, createSetInterval, callback) => {
-  const files = [];
+  const files = []
 
   fs.watch('./', { recursive: true }, (eventType, filename) => {
-    if (isHiddenDirectory(filename)) return;
-    files.push(filename);
-  });
+    if (isHiddenDirectory(filename)) return
+    files.push(filename)
+  })
 
   createSetInterval(() => {
-    if (files.length === 0) return;
-    callback(files.splice(0, files.length));
-  }, 5);
-};
+    if (files.length === 0) return
+    callback(files.splice(0, files.length))
+  }, 5)
+}
 
 module.exports = {
   isHiddenDirectory,
   createWatcher
-};
+}
