@@ -1,6 +1,7 @@
 const fs = require('fs')
 const createState = require('./state')
 const createTest = require('./test')
+const createSuite = require('./suite')
 const { createRunner } = require('./runner')
 const parseOptions = require('../util/options')
 const options = parseOptions(process.argv.slice(2))
@@ -21,12 +22,26 @@ const logReport = (payload) => {
   logStream.end()
 }
 
-const { getState, addTest, addTestWithOnly, addTestWithSkip } = createState()
+const {
+  addTest,
+  addTestWithOnly,
+  addTestWithSkip,
+  addSuite,
+  addSuiteWithOnly,
+  addSuiteWithSkip,
+  resolveState,
+} = createState()
+
 const execWithState = createRunner(logPass, logFail, logReport, options)
 const test = createTest(addTest, addTestWithOnly, addTestWithSkip)
+const describe = createSuite(addSuite, addSuiteWithOnly, addSuiteWithSkip)
 
 process.once('beforeExit', () => {
-  execWithState(getState())
+  execWithState(resolveState())
 })
 
-module.exports = test
+module.exports = {
+  ...test,
+  test,
+  describe,
+}

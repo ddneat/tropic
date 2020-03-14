@@ -78,7 +78,7 @@ const resolveAsPromise = (test, logPass, logFail, errorMessages, SLOW) => {
   }
 
   // Promise.resolve(test.callback()).then(clearAndPass).catch(clearAndFail);
-
+  
   let maybePromise
   try {
     maybePromise = test.callback()
@@ -120,14 +120,25 @@ const createRunner = (logPass, logFail, logReport, options) => {
   }
 
   return (state) => {
-    const tests = state.only.length ? state.only : state.test
+    const tests = []
+
+    const withSurfix = (str, surfix) => surfix ? `${surfix} ${str}`: str
+
+    const resolveChildren = (node, surfix) => {
+      node && node.tests.forEach(({ name, cb }) => tests.push({ title: withSurfix(name, surfix), callback: cb }))
+      node.suites.forEach(({ name, children }) => {
+        children && resolveChildren(children, withSurfix(name, surfix))
+      })
+    }
+
+    resolveChildren(state)
 
     const allResolved = () => {
       logReport({
         executedCount: tests.length,
-        allTestsLength: state.test.length + state.only.length + state.skip.length,
-        onlyLength: state.only.length,
-        skipLength: state.skip.length
+        allTestsLength: tests.length,
+        onlyLength: 0,
+        skipLength: 0,
       })
     }
 

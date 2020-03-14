@@ -8,8 +8,16 @@ const extractCount = matches => {
   return matches === null ? 0 : parseInt(matches[matches.length - 1].match(/\d*/))
 }
 
+const clearColors = (matches) => {
+  return matches.map(line => line
+    .replace('✓\u001b[0m \u001b[36m', '')
+    .replace('\u001b[0m', '')
+  )
+}
+
 const passingCount = str => extractCount(str.match(/\d* passing/g))
 const failingCount = str => extractCount(str.match(/\d* failing/g))
+const passingLines = str => clearColors(str.match(/\✓(.*)/g))
 
 const runDirectories = directories => {
   directories.forEach(dir => {
@@ -36,6 +44,7 @@ const runFiles = (files, basePath) => {
 }
 
 module.exports = {
+  passingLines,
   passingCount,
   failingCount,
   runFiles,
